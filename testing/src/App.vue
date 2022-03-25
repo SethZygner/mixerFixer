@@ -16,7 +16,7 @@ import { RouterLink, RouterView } from "vue-router";
       <li style="padding-top: 10px"><RouterLink to="/">Home</RouterLink></li>
       <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
       <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
-      <li> <RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
+      <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
       <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
       <li><RouterLink to="">Social<br>Hub</RouterLink></li>
       <li><RouterLink to="">Login<br>/Sign Up</RouterLink></li>

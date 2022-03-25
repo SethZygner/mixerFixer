@@ -15,24 +15,8 @@ let requestOptions = {
   redirect: "follow",
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-//This is a test
->>>>>>> parent of 437ac3a (Testing2)
-=======
-//This is a test aswell
->>>>>>> parent of 26fdee9 (Test 2)
-=======
-//This is a test aswell
->>>>>>> parent of 26fdee9 (Test 2)
-=======
-//This is a test aswell
->>>>>>> parent of 26fdee9 (Test 2)
-
+//Fuck this
 
 function fetchRandomCocktail(){
   fetch(`${url}`, requestOptions)
