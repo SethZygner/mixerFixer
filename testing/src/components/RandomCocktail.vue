@@ -14,9 +14,6 @@ let requestOptions = {
   method: "GET",
   redirect: "follow",
 };
-//Firebase stuff goes here
-
-//Fuck this
 
 function fetchRandomCocktail(){
   fetch(`${url}`, requestOptions)
