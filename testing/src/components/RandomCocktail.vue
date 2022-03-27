@@ -31,8 +31,6 @@ fetchRandomCocktail();
 
 <template>
   <div class="fullInfo">
-    <h1>{{state.drinks.drinks[0].strDrink}}</h1>
-    <img id="randomImage" :src=state.drinks.drinks[0].strDrinkThumb alt="Image here">
 
     <div class="info">
       <p v-if="state.drinks.drinks[0].strAlcoholic === 'Alcoholic'">Alcoholic: Yes</p>
@@ -97,13 +95,14 @@ fetchRandomCocktail();
         <p v-if="state.drinks.drinks[0].strIngredient15 != null">{{state.drinks.drinks[0].strIngredient15}}</p>
         <p v-if="state.drinks.drinks[0].strMeasure15 != null">{{state.drinks.drinks[0].strMeasure15}}</p>
       </div>
-      <div id="last">
-        <p>{{state.drinks.drinks[0].strInstructions}}</p>
-      </div>
     </div>
-
     <div>
+      <h1>{{state.drinks.drinks[0].strDrink}}</h1>
+      <img id="randomImage" :src=state.drinks.drinks[0].strDrinkThumb alt="Image here">
       <button @click="fetchRandomCocktail" class="randomButton">Randomize</button>
+    </div>
+    <div id="last">
+      <p>{{state.drinks.drinks[0].strInstructions}}</p>
     </div>
 
   </div>
@@ -117,6 +116,16 @@ fetchRandomCocktail();
 *{
   color: white;
 }
+
+.fullInfo{
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  text-align: center;
+}
+
+
+
 div{
   text-align: center;
   margin: 0 auto;
@@ -129,6 +138,7 @@ div{
 .randomButton{
   margin: 10px auto;
   height: 50px;
+  display: block;
   width: 100px;
   text-align: center;
   border-radius: 10px;
@@ -141,17 +151,17 @@ img{
   height: auto;
 }
 
-.info{
+.info, #last{
   width: 350px;
-  height: 150px;
+  height: 350px;
   overflow: scroll;
   border: black solid 1px;
   background: rgba(0, 0, 0, .4);
   border-radius: 5px;
-}
-
-#last{
+  position: relative;
+  top: 80px;
   text-align: center;
+  padding: 10px;
 }
 
 #last p{
@@ -159,8 +169,9 @@ img{
   grid-column-end: 3;
 }
 
-
-
+#last::-webkit-scrollbar{
+  display: none;
+}
 
 .info::-webkit-scrollbar{
   display: none;
