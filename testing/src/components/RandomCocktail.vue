@@ -117,6 +117,7 @@ fetchRandomCocktail();
   color: white;
 }
 
+/* This styles the whole thing pretty much */
 .fullInfo{
   margin: 0 auto;
   display: grid;
@@ -134,6 +135,10 @@ div{
 #randomImage{
   border-radius: 10px;
 }
+img{
+  width: 300px;
+  height: auto;
+}
 
 .randomButton{
   margin: 10px auto;
@@ -146,11 +151,9 @@ div{
   color: white;
 }
 
-img{
-  width: 300px;
-  height: auto;
-}
 
+
+/* This is the styling of both instructions AND ingredients*/
 .info, #last{
   width: 350px;
   height: 350px;
@@ -164,19 +167,15 @@ img{
   padding: 10px;
 }
 
-#last p{
-  grid-column-start: 1;
-  grid-column-end: 3;
-}
-
+/* This hides the scroll bar for the instructions */
 #last::-webkit-scrollbar{
   display: none;
 }
 
+/* This hides the scroll bar for the ingredients */
 .info::-webkit-scrollbar{
   display: none;
 }
-
 
 .info div{
   display: grid;
