@@ -74,6 +74,7 @@ import { RouterLink, RouterView } from "vue-router";
   height: 80px;
 }
 
+
 #menu ul{
   list-style-type: none;
   display: inline-flex;
