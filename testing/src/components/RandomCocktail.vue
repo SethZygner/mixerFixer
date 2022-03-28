@@ -1,3 +1,5 @@
+
+
 <script setup>
 import { ref,reactive } from 'vue';
 
@@ -126,7 +128,6 @@ fetchRandomCocktail();
 }
 
 
-
 div{
   text-align: center;
   margin: 0 auto;
@@ -151,7 +152,9 @@ img{
   color: white;
 }
 
-
+.arrow_div{
+  display: none;
+}
 
 /* This is the styling of both instructions AND ingredients*/
 .info, #last{
@@ -180,7 +183,10 @@ img{
 .info div{
   display: grid;
   grid-template-columns: 175px 175px;
+  text-align: center;
 }
+
+
 .info div:first-child{
   text-align: right;
 }
@@ -188,6 +194,7 @@ img{
 .info div:last-child{
   text-align: left;
 }
+
 
 </style>
 

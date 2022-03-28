@@ -5,13 +5,13 @@ document.title = "Home";
 <template>
 
   <div class="mainMessage">
-    <h1>Find Your Favs<br>And More</h1>
+    <h1>Find Your Faves<br>And More</h1>
     <p>Introducing Mixer Fixer, a new<br>
       website designed for the modern<br>
       generation of social drinking!</p>
   </div>
   <div class="wip">
-    <h1>Work in progress</h1>
+    <img src="../assets/images/Image_1.png">
   </div>
 
 </template>
@@ -36,10 +36,14 @@ document.title = "Home";
   bottom: -20px;
 }
 
-.wip{
-  position: absolute;
-  left: 140px;
-  top: 300px;
+.wip img{
+  position: relative;
+  width: 600px;
+  height: auto;
+  top: 80px;
+  left: 50px;
+  border-radius: 15px;
+  border: 3px black solid;
 }
 
 </style>

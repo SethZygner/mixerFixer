@@ -7,7 +7,9 @@ document.title = "Browse Cocktails";
 </script>
 
 <template>
-
+  <div>
+    <CocktailSearchForm />
+  </div>
 </template>
 
 <style scoped>

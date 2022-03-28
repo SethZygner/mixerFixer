@@ -104,6 +104,15 @@ import { RouterLink, RouterView } from "vue-router";
   color: darkorange !important;
 }
 
+@media screen and (max-width: 320px){
+  #side-bar{
+    display: none;
+  }
+
+  #logo{
+    width: 50px;
+  }
+}
 
 
 </style>
