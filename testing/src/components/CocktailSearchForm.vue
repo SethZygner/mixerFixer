@@ -7,12 +7,15 @@ let ingredientUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list
 
 let ingredientArray = reactive([]);
 let infoArray = reactive([]);
+let drinkInfo = reactive([]);
 let pictureArray = reactive([]);
 let selected = ref("7-Up");
 let requestOptions = {
   method: "GET",
   redirect: "follow",
 };
+
+const state = reactive({ drinks: {} });
 
 let newObject = reactive({});
 
@@ -25,6 +28,19 @@ function change(selected){
   getData(mainUrl);
 }
 
+//Put all ingredients into array
+function getDrinkInfo(url){
+  fetch(url)
+  .then((response) => {
+    return response.json();
+  })
+  .then((completedData) => {
+    drinkInfo.length = 0;
+    drinkInfo.push(completedData.drinks[0]);
+    console.info(drinkInfo[0].strMeasure1);
+  })
+}
+
 //Gets cocktails' Images
 function getData(url){
   fetch(url, requestOptions)
@@ -33,7 +49,6 @@ function getData(url){
       .then((completedData)=>{
         imagesIntoArray(completedData.drinks, "strDrinkThumb");
         namesIntoObject(completedData.drinks, "strDrink");
-        console.info(infoArray);
       })
 }
 
@@ -74,7 +89,8 @@ function extractIngredients(arr, prop){
 
 
 function printName(index){
-  console.log(infoArray[1][index]);
+  let url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + infoArray[1][index] + "&api_key=1";
+  getDrinkInfo(url);
 }
 
 
@@ -93,12 +109,17 @@ getIngredients(ingredientUrl);
     </select>
   </div>
 
-  <div class="showImages">
-    <div v-for="image in infoArray[0]">
-      <h2>{{infoArray[1][infoArray[0].indexOf(image)]}}</h2>
-      <img  @click="printName(infoArray[0].indexOf(image))" :src="image" alt="">
+  <div class="fullInfo">
+
+    <div class="showImages">
+      <div v-for="image in infoArray[0]">
+        <h2>{{infoArray[1][infoArray[0].indexOf(image)]}}</h2>
+        <img  @click="printName(infoArray[0].indexOf(image))" :src="image" alt="">
+      </div>
     </div>
   </div>
+
+
 </template>
 
 <style scoped>
