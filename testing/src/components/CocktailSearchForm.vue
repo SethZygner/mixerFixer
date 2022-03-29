@@ -1,47 +1,56 @@
 <script setup>
 import {reactive, ref} from "vue";
 
-let mainUrl = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Gin";
+let mainUrl = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=7-Up";
 
 let ingredientUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list";
 
-let array = reactive([]);
+let ingredientArray = reactive([]);
+let infoArray = reactive([]);
 let pictureArray = reactive([]);
-let selected = ref("Vodka");
+let selected = ref("7-Up");
 let requestOptions = {
   method: "GET",
   redirect: "follow",
 };
-const state = reactive({ drinks: {} });
 
+let newObject = reactive({});
 
 
 //Image portion of Code
 //Changes the mainUrl to fetch cocktails with specified ingredient
 function change(selected){
   mainUrl = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=" + selected;
-  pictureArray.length = 0;
-  getImages(mainUrl);
+  infoArray.length = 0;
+  getData(mainUrl);
 }
 
 //Gets cocktails' Images
-function getImages(url){
+function getData(url){
   fetch(url, requestOptions)
       .then((response) => {
         return response.json();})
       .then((completedData)=>{
-        //Come back and change this
         imagesIntoArray(completedData.drinks, "strDrinkThumb");
+        namesIntoObject(completedData.drinks, "strDrink");
+        console.info(infoArray);
       })
+}
+
+function namesIntoObject(arr, prop){
+  let extractedValue = arr.map(item => item[prop]);
+  infoArray.push(newObject.name = extractedValue);
+  return extractedValue;
 }
 
 //Put images in an array to be called and listed
 function imagesIntoArray(arr, prop) {
   // extract value from property
   let extractedValue = arr.map(item => item[prop]);
-  pictureArray.push(extractedValue);
+  infoArray.push(newObject.imageUrl = extractedValue);
   return extractedValue;
 }
+
 
 
 
@@ -59,35 +68,36 @@ function getIngredients(url){
 //Stores all ingredients into an array (Done)
 function extractIngredients(arr, prop){
   let extractedValue = arr.map(item => item[prop]);
-  array.push(extractedValue.sort());
+  ingredientArray.push(extractedValue.sort());
   return extractedValue;
 }
 
 
+function printName(index){
+  console.log(infoArray[1][index]);
+}
+
 
 //Initial function calls
-getImages(mainUrl);
+getData(mainUrl);
 getIngredients(ingredientUrl);
 
 </script>
 
 <template>
   <div>
-    <div>
-      <!-- Calls the function to change the mainUrl when the option is clicked -->
-      <select id="drop-down" v-model="selected" @change="change(selected)">
-        <option disabled value="">Pick your Ingredient</option>
-        <option v-for="item in array[0]">{{item}}</option>
-      </select>
-    </div>
-    <div class="showImages">
-      <ul>
-        <li v-for="image in pictureArray[0]"><img :src="image" alt=""></li>
-      </ul>
-    </div>
+    <!-- Calls the function to change the mainUrl when the option is clicked -->
+    <select id="drop-down" v-model="selected" @change="change(selected)">
+      <option disabled value="">Pick your Ingredient</option>
+      <option v-for="item in ingredientArray[0]">{{item}}</option>
+    </select>
   </div>
-  <div>
 
+  <div class="showImages">
+    <div v-for="image in infoArray[0]">
+      <h2>{{infoArray[1][infoArray[0].indexOf(image)]}}</h2>
+      <img  @click="printName(infoArray[0].indexOf(image))" :src="image" alt="">
+    </div>
   </div>
 </template>
 
@@ -104,28 +114,24 @@ getIngredients(ingredientUrl);
 }
 
 .showImages{
-  width: 600px;
+  width: 400px;
   height: 500px;
-  padding: 10px;
-  border: black solid 1px;
+  margin: 20px auto;
   overflow: scroll;
-  margin: 0 auto;
-  text-align: center;
-  justify-content: center;
 }
 
 .showImages::-webkit-scrollbar{
   display: none;
 }
 
-.showImages ul li img{
-  width: 350px;
-  height: auto;
-  padding-top: 10px;
+.showImages div{
+  border: 1px black solid;
+  margin: 10px auto;
 }
 
-.showImages ul{
-  list-style-type: none;
+.showImages div img{
+  width: 200px;
+  height: auto;
 }
 
 </style>
