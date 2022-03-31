@@ -1,5 +1,27 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRouter, useRoute} from "vue-router";
+/*
+import * as firebase from 'firebase/app';
+import { onBeforeMount } from "vue";
+
+import 'firebase/auth';
+
+const router = useRouter();
+const route = useRoute();
+
+onBeforeMount(() => {
+  firebase.auth().onAuthStateChanged((user) =>{
+    if(!user){
+      router.replace('/login');
+    } else if(route.path == "/login" || route.path == "/signup" ){
+      router.replace('/');
+    }
+  });
+
+});
+*/
+
+
 </script>
 
 <template>
@@ -19,7 +41,7 @@ import { RouterLink, RouterView } from "vue-router";
       <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
       <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
       <li><RouterLink to="">Social<br>Hub</RouterLink></li>
-      <li><RouterLink to="">Login<br>/Sign Up</RouterLink></li>
+      <li><RouterLink to="/login">Login<br>/Sign Up</RouterLink></li>
     </ul>
   </div>
 
