@@ -8,7 +8,6 @@ let ingredientUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list
 let ingredientArray = reactive([]);
 let infoArray = reactive([]);
 let drinkInfo = reactive([]);
-let pictureArray = reactive([]);
 let selected = ref("7-Up");
 let requestOptions = {
   method: "GET",
@@ -18,6 +17,7 @@ let requestOptions = {
 const state = reactive({ drinks: {} });
 
 let newObject = reactive({});
+
 
 
 //Image portion of Code
@@ -37,7 +37,7 @@ function getDrinkInfo(url){
   .then((completedData) => {
     drinkInfo.length = 0;
     drinkInfo.push(completedData.drinks[0]);
-    console.info(drinkInfo[0].strMeasure1);
+    console.info(drinkInfo[0]);
   })
 }
 
@@ -52,6 +52,7 @@ function getData(url){
       })
 }
 
+
 function namesIntoObject(arr, prop){
   let extractedValue = arr.map(item => item[prop]);
   infoArray.push(newObject.name = extractedValue);
@@ -65,7 +66,6 @@ function imagesIntoArray(arr, prop) {
   infoArray.push(newObject.imageUrl = extractedValue);
   return extractedValue;
 }
-
 
 
 
@@ -111,6 +111,9 @@ getIngredients(ingredientUrl);
 
   <div class="fullInfo">
 
+    <div id="ingredients">
+    </div>
+
     <div class="showImages">
       <div v-for="image in infoArray[0]">
         <h2>{{infoArray[1][infoArray[0].indexOf(image)]}}</h2>
@@ -119,6 +122,9 @@ getIngredients(ingredientUrl);
     </div>
   </div>
 
+  <div>
+
+  </div>
 
 </template>
 
@@ -153,6 +159,10 @@ getIngredients(ingredientUrl);
 .showImages div img{
   width: 200px;
   height: auto;
+}
+
+.showImages div img:hover{
+  cursor: pointer;
 }
 
 </style>

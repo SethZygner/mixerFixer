@@ -5,13 +5,15 @@ import { ref,reactive } from 'vue';
 
 //Makes the title reactive
 const state = reactive({ drinks: {} });
+let url = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+
 
 //Sets the result to
 function setResults(results){
   state.drinks = results;
 }
 
-let url = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+
 let requestOptions = {
   method: "GET",
   redirect: "follow",
