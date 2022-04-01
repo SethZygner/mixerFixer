@@ -31,6 +31,7 @@ import { RouterLink, RouterView } from "vue-router";
 #side-bar{
   width: 80px;
   height: 900px;
+  max-height: 2000px;
   border-right: 3px darkgrey solid;
   margin-top: 80px;
   float: left;
