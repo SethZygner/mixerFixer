@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
+import { getAuth } from "firebase/auth";
+import 'firebase/compat/auth';
 
 const config = {
     apiKey: "AIzaSyCucMeDhjzc8ajC4hmbkyeIJMiK8FzB5wI",
@@ -16,6 +18,9 @@ firebase.initializeApp(config);
 
 let db = firebase.firestore();
 
+
+
+//Store data by making/using an existing collection
 function addThing(coll, data){
     db.collection(coll)
         .add(data)
@@ -26,9 +31,11 @@ function addThing(coll, data){
 
 
 
+
 export default{
     addThing
 }
+
 
 
 

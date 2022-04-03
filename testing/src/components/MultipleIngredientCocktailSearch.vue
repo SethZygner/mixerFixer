@@ -58,6 +58,9 @@ function clickedIngredient(index){
     multipleIngredientUrl += ","+ingredients[0].at(index);
     console.log(multipleIngredientUrl);
   }
+
+
+
 }
 
 function clearIngredientList(){
@@ -79,7 +82,7 @@ listIngredients();
 
 <template>
 
-  <button @click="clearIngredientList"></button>
+  <button @click="clearIngredientList">Clear</button>
   <div id="ingredientContainer">
     <div @click="clickedIngredient(ingredients[0].indexOf(ingredient))" v-for="ingredient in ingredients[0]" class="ingredient"
          :key="ingredient">{{ingredient}}</div>
@@ -90,12 +93,21 @@ listIngredients();
 
 <style scoped>
 
+*{
+
+}
+
+
+button{
+  height: 30px;
+  width: 100px;
+}
+
 #ingredientContainer{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 100px));
+  grid-template-columns: auto auto auto auto auto auto auto auto auto;
   gap: 10px;
-  grid-auto-flow: dense;
-  width: 700px;
+  width: 900px;
   height: 600px;
   overflow: scroll;
 }
@@ -113,10 +125,6 @@ listIngredients();
 
 #ingredientContainer::-webkit-scrollbar{
   display: none;
-}
-
-.clicked{
-  background-color: #B447CC;
 }
 
 </style>
