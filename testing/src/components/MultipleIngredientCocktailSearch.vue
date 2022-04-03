@@ -1,6 +1,7 @@
 <script setup>
 //Imports
 import {reactive, ref} from "vue";
+import fire from "../firebase.js";
 
 
 //Variables
@@ -57,8 +58,6 @@ function clickedIngredient(index){
     multipleIngredientUrl += ","+ingredients[0].at(index);
     console.log(multipleIngredientUrl);
   }
-
-
 }
 
 function clearIngredientList(){

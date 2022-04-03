@@ -12,7 +12,24 @@ const config = {
     measurementId: "G-0FQGWW10WH"
 };
 
-initializeApp(config);
+firebase.initializeApp(config);
+
+let db = firebase.firestore();
+
+function addThing(coll, data){
+    db.collection(coll)
+        .add(data)
+        .then((doc)=>{
+            console.log(doc.id);
+        })
+}
+
+
+
+export default{
+    addThing
+}
+
 
 
 
