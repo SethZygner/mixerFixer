@@ -14,7 +14,6 @@ let requestOptions = {
   redirect: "follow",
 };
 
-const state = reactive({ drinks: {} });
 
 let newObject = reactive({});
 
@@ -101,17 +100,13 @@ getIngredients(ingredientUrl);
 </script>
 
 <template>
-  <div>
-    <!-- Calls the function to change the mainUrl when the option is clicked -->
-    <select id="drop-down" v-model="selected" @change="change(selected)">
-      <option disabled value="">Pick your Ingredient</option>
-      <option v-for="item in ingredientArray[0]">{{item}}</option>
-    </select>
-  </div>
-
   <div class="fullInfo">
-
-    <div id="ingredients">
+    <div class="dropDown">
+      <!-- Calls the function to change the mainUrl when the option is clicked -->
+      <select id="drop-down" v-model="selected" @change="change(selected)">
+        <option disabled value="">Pick your Ingredient</option>
+        <option v-for="item in ingredientArray[0]">{{item}}</option>
+      </select>
     </div>
 
     <div class="showImages">
@@ -121,11 +116,6 @@ getIngredients(ingredientUrl);
       </div>
     </div>
   </div>
-
-  <div>
-
-  </div>
-
 </template>
 
 <style scoped>

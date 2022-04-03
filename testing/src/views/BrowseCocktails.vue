@@ -1,6 +1,7 @@
 
 <script setup>
-import CocktailSearchForm from "../components/CocktailSearchForm.vue"
+import CocktailSearchForm from "../components/CocktailSearchForm.vue";
+import Multiple from "../components/MultipleIngredientCocktailSearch.vue";
 
 
 document.title = "Browse Cocktails";
@@ -8,14 +9,14 @@ document.title = "Browse Cocktails";
 
 <template>
   <div>
-    <CocktailSearchForm />
+    <Multiple />
   </div>
 </template>
 
 <style scoped>
 
 div{
-  margin: 20px auto 0 auto;
+  margin-top: 20px;
   text-align: center;
 }
 
