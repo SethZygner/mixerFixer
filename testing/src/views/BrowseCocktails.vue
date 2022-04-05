@@ -1,7 +1,7 @@
 
 <script setup>
-import CocktailSearchForm from "../components/CocktailSearchForm.vue";
 import Multiple from "../components/MultipleIngredientCocktailSearch.vue";
+import RandomCocktail from "../components/RandomCocktail.vue";
 
 
 document.title = "Browse Cocktails";

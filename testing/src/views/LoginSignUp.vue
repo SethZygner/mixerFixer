@@ -9,38 +9,38 @@ import fire from "../firebase.js";
 import {onMounted, reactive, ref} from "vue";
 
 const email = ref("");
+const userName = ref("");
 const password = ref("");
 const rePass = ref("");
 const router = useRouter();
-//Sign Up a New User
+
+//Sign Up a New User and go
+//to the home page
 function signUp(){
-  if(password.value !== rePass.value){
-    alert("Password didn't match! Try again.")
+  if(userName.value.trim() !== ""){
+    if(password.value !== rePass.value){
+      alert("Password didn't match! Try again.")
+    } else{
+      fire.newUser(email.value, password.value);
+      let auth = fire.auth;
+      onAuthStateChanged(auth, ()=>{
+        console.log("New user added: " + auth.currentUser.uid);
+        fire.addUser({
+          username:userName.value,
+          email: email.value
+        });
+        email.value ="";
+        password.value="";
+        router.push('/');
+      })
+    }
   }else{
-    fire.newUser(email.value, password.value);
-    let auth = fire.auth;
-    onAuthStateChanged(auth, ()=>{
-      console.log("New user added: " + auth.currentUser.uid);
-      fire.addUser({name:"Seth"});
-      email.value ="";
-      password.value="";
-      router.push('/');
-    })
-
-
+    alert("No username entered!");
   }
 }
 
 function signOut(){
   fire.signOut();
-}
-
-function returnId(){
-  if(fire.auth.currentUser === null){
-    console.log("No User Signed In")
-  }else {
-    console.log(fire.auth.currentUser.uid);
-  }
 }
 </script>
 
@@ -51,6 +51,8 @@ function returnId(){
     </div>
 
     <div class="rightSide">
+      <input type="text" v-model="userName" placeholder="Username">
+      <br>
       <input type="email" v-model="email" placeholder="Enter email">
       <br>
       <input type="password" v-model="password" placeholder="Enter Password">
@@ -58,10 +60,6 @@ function returnId(){
       <input type="password" v-model="rePass" placeholder="Re-enter password">
       <br>
       <button @click="signUp">Sign Up</button>
-      <br>
-      <button @click="returnId">Show ID</button>
-      <br>
-      <button @click="signOut">Sign Out</button>
     </div>
   </div>
 
@@ -122,5 +120,10 @@ button{
 button:hover{
   cursor: pointer;
 }
+
+#consent{
+  border: 1px black solid;
+}
+
 
 </style>

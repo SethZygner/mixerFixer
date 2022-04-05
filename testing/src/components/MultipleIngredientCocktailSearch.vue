@@ -4,6 +4,7 @@ import {reactive, ref} from "vue";
 import fire from "../firebase.js";
 
 
+
 //Variables
 let apiKey = "9973533";
 
