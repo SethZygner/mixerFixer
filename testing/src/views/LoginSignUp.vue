@@ -1,8 +1,12 @@
 <script setup>
 import { RouterLink, RouterView, useRoute, useRouter} from "vue-router";
-
+import { getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "firebase/auth";
 import fire from "../firebase.js";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 
 const email = ref("");
 const password = ref("");
@@ -14,9 +18,16 @@ function signUp(){
     alert("Password didn't match! Try again.")
   }else{
     fire.newUser(email.value, password.value);
-    email.value ="";
-    password.value="";
-    router.push('/')
+    let auth = fire.auth;
+    onAuthStateChanged(auth, ()=>{
+      console.log("New user added: " + auth.currentUser.uid);
+      fire.addUser({name:"Seth"});
+      email.value ="";
+      password.value="";
+      router.push('/');
+    })
+
+
   }
 }
 
@@ -31,7 +42,6 @@ function returnId(){
     console.log(fire.auth.currentUser.uid);
   }
 }
-
 </script>
 
 <template>

@@ -1,21 +1,33 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import {reactive, ref} from "vue";
+import { getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "firebase/auth";
+import {onMounted, reactive, ref} from "vue";
 import fire from "./firebase.js";
 
+
+
 let isLoggedIn = ref(false);
+let auth = getAuth();
 
+//Sees if the user is signed in or not
 function checkIfSignedIn(){
-  console.dir(fire.auth.currentUser);
-  fire.auth.onAuthStateChanged(user => {
-    if (user) {
-      isLoggedIn.value = true
-    } else {
-      isLoggedIn.value = false
-    }
+  onMounted(()=>{
+    onAuthStateChanged(auth, (user)=>{
+      if(user){
+        console.log(fire.auth.currentUser.uid);
+        isLoggedIn.value = true;
+      }else{
+        console.log("No user seen");
+        isLoggedIn.value = false
+      }
+    })
   })
-}
 
+}
 reactive(checkIfSignedIn());
 
 

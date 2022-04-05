@@ -44,18 +44,20 @@ function signIn(email, password){
 
 
 //Store data by making/using an existing collection
-function addThing(coll, data){
-    db.collection(coll)
-        .add(data)
-        .then((doc)=>{
-            console.log(doc.id);
+function addUser(data){
+    db.collection("Users")
+        .doc(auth.currentUser.uid)
+        .set(data)
+        .catch((err)=>{
+            console.log(err.message);
         })
+
 }
 
 
 
 export default{
-    addThing,
+    addUser,
     newUser,
     signOut,
     auth
