@@ -1,7 +1,13 @@
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
-import { getAuth } from "firebase/auth";
+
+import { getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
+} from "firebase/auth";
+
 import 'firebase/compat/auth';
 
 const config = {
@@ -17,7 +23,24 @@ const config = {
 firebase.initializeApp(config);
 
 let db = firebase.firestore();
+let auth = getAuth();
 
+//Authorization functions
+function newUser(email, password){
+    createUserWithEmailAndPassword(auth, email, password)
+        .catch((err)=>{
+            alert(err.message);
+        })
+}
+function signOut(){
+    auth.signOut();
+}
+function signIn(email, password){
+    signInWithEmailAndPassword(auth, email, password)
+        .catch((err)=>{
+            alert(err.message);
+        })
+}
 
 
 //Store data by making/using an existing collection
@@ -31,9 +54,11 @@ function addThing(coll, data){
 
 
 
-
 export default{
-    addThing
+    addThing,
+    newUser,
+    signOut,
+    auth
 }
 
 

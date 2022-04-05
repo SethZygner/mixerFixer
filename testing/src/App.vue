@@ -1,8 +1,27 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import {reactive, ref} from "vue";
+import fire from "./firebase.js";
+
+let isLoggedIn = ref(false);
+
+function checkIfSignedIn(){
+  console.dir(fire.auth.currentUser);
+  fire.auth.onAuthStateChanged(user => {
+    if (user) {
+      isLoggedIn.value = true
+    } else {
+      isLoggedIn.value = false
+    }
+  })
+}
+
+reactive(checkIfSignedIn());
+
+
 </script>
 
-<template>
+<template id="test">
   <div id="side-bar">
     <div class="social-media">
       <img src="@/assets/icons/facebook-logo-1024x1024.png">
@@ -19,10 +38,14 @@ import { RouterLink, RouterView } from "vue-router";
       <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
       <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
       <li><RouterLink to="">Social<br>Hub</RouterLink></li>
-      <li><RouterLink to="/logInSignUp">Login<br>/Sign Up</RouterLink></li>
+      <li>
+        <div>
+          <RouterLink v-if="isLoggedIn.valueOf()" to="" >Account</RouterLink>
+          <RouterLink v-else to="/logInSignUp" >Login<br>/Sign Up</RouterLink>
+        </div>
+      </li>
     </ul>
   </div>
-
   <RouterView :key="$route.path" />
 </template>
 
