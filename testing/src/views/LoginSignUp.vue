@@ -1,12 +1,8 @@
 <script setup>
-import { RouterLink, RouterView, useRoute, useRouter} from "vue-router";
-import { getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
+import {useRouter} from "vue-router";
+import {onAuthStateChanged} from "firebase/auth";
 import fire from "../firebase.js";
-import {onMounted, reactive, ref} from "vue";
+import {ref} from "vue";
 
 const email = ref("");
 const userName = ref("");
@@ -39,9 +35,6 @@ function signUp(){
   }
 }
 
-function signOut(){
-  fire.signOut();
-}
 </script>
 
 <template>
@@ -60,6 +53,8 @@ function signOut(){
       <input type="password" v-model="rePass" placeholder="Re-enter password">
       <br>
       <button @click="signUp">Sign Up</button>
+      <br>
+      <p>Already have an account? <a href="#">Sign In</a></p>
     </div>
   </div>
 

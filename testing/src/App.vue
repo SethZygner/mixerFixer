@@ -52,7 +52,7 @@ reactive(checkIfSignedIn());
       <li><RouterLink to="">Social<br>Hub</RouterLink></li>
       <li>
         <div>
-          <RouterLink v-if="isLoggedIn.valueOf()" to="" >Account</RouterLink>
+          <RouterLink v-if="isLoggedIn.valueOf()" to="/Account" >Account</RouterLink>
           <RouterLink v-else to="/logInSignUp" >Login<br>/Sign Up</RouterLink>
         </div>
       </li>
