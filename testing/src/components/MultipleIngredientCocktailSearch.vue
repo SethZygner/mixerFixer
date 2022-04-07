@@ -56,12 +56,12 @@ function clickedIngredient(index){
     multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
     multipleIngredientUrl += (ingredients[0].at(index));
     map.set(ingredients[0].at(index), ingredients[0].at(index));
-    view += ingredients[0].at(index);
-    console.log(multipleIngredientUrl);
+    view.value += ingredients[0].at(index);
+    console.log(view.value);
   }else{
     multipleIngredientUrl += ","+ingredients[0].at(index);
-    view += ", " + ingredients[0].at(index);
-    console.log(multipleIngredientUrl);
+    view.value += ", " + ingredients[0].at(index);
+    console.log(view.value);
   }
 
 
@@ -87,19 +87,17 @@ listIngredients();
 
 <template>
 
-  <button class="what" @click="ingredientsHidden = !ingredientsHidden">Hide</button>
+  <div class="ShowButton" @click="ingredientsHidden = !ingredientsHidden">Browse<br>Specific<br>Ingredients</div>
   <div id="ingredientContainer" :class="ingredientsHidden && 'hide'">
-    <div class="functions">
-      <div class="ingView">
-        <!-- This isn't working for some reason -->
-        <h1>{{view}}</h1>
-      </div>
-      <button @click="clearIngredientList">Clear</button>
-    </div>
+    <div class="showIng">
+      <div>{{view}}</div>
 
+    </div>
+    <button @click="clearIngredientList">Clear</button>
     <div id="ingredients">
       <div @click="clickedIngredient(ingredients[0].indexOf(ingredient))" v-for="ingredient in ingredients[0]" class="ingredient"
-           :key="ingredient">{{ingredient}}</div>
+           :key="ingredient">{{ingredient}}
+      </div>
     </div>
   </div>
 
@@ -109,22 +107,22 @@ listIngredients();
 
 <style scoped>
 
-button{
-  height: 40px;
-  width: 100px;
-  margin: 0 auto;
-}
-
-.ingView{
+.ShowButton{
   border: 1px black solid;
-  width: 400px;
+  border-radius: 10px;
+  height: 200px;
+  width: 200px;
   margin: 0 auto;
-  background-color: rgba(0, 0, 0, .8);
-  }
+  background: url("../assets/images/specificBrowse.jpg");
 
-.functions{
-  display: inline-flex;
 }
+
+.showIng{
+  border: 1px black solid;
+  width: 18em;
+  height: 2em;
+}
+
 
 #ingredients{
   display: grid;
@@ -141,12 +139,11 @@ button{
 #ingredientContainer{
   border: 1px black solid;
   text-align: center;
-  margin: -30px auto;
   width: 80%;
   height: 600px;
   background-color: rgba(0, 0, 0, .4);
   border-radius: 20px;
-  padding: 20px;
+  margin: 0 auto;
 }
 
 #ingredients div{

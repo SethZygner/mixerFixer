@@ -34,7 +34,7 @@ fetchRandomCocktail();
 
 
 <template>
-  <div class="fullInfo">
+  <div v-if="state.drinks != null && state.drinks.drinks != null && state.drinks.drinks[0] != null" class="fullInfo">
 
     <div class="info">
       <p v-if="state.drinks.drinks[0].strAlcoholic === 'Alcoholic'">Alcoholic: Yes</p>

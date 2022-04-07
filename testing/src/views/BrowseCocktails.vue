@@ -1,8 +1,6 @@
 
 <script setup>
 import Multiple from "../components/MultipleIngredientCocktailSearch.vue";
-import RandomCocktail from "../components/RandomCocktail.vue";
-
 
 document.title = "Browse Cocktails";
 </script>

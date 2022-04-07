@@ -27,6 +27,7 @@ function signUp(){
         });
         email.value ="";
         password.value="";
+        rePass.value = "";
         router.push('/');
       })
     }
