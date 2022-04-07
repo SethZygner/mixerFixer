@@ -17,11 +17,12 @@ document.title = "Home";
     <div class="announcements">
       <h1>New Changes</h1>
       <p1>Website launch!</p1>
-       <H3>Today! </H3>
+       <p4>Today! </p4>
       <p3> Random Cocktail Function Implemented!</p3>
       <h2>News</h2>
       <p5>Dev update messages go here blah blah <br>
         blah blah blah</p5>
+      <p6>Today! </p6>
 
   </div>
 
@@ -42,15 +43,14 @@ document.title = "Home";
   text-align: center;
 }
 .mainMessage h1{
-  font-size: 35px;
+  font-size: 45px;
   position: relative;
-  bottom: -20px;
   text-shadow: 2px 2px 4px #000000;
 }
 .mainMessage p{
   font-size: 25px;
   position: relative;
-  bottom: -10px;
+  bottom: 15px;
   text-shadow: 2px 2px 4px #000000;
 }
 
@@ -103,22 +103,29 @@ document.title = "Home";
   font-size: 20px;
   position: absolute;
   bottom: 35px;
-  right: 1310px;
+  right: 1320px;
   color: gray;
   text-shadow: 2px 2px 4px #000000;
 }
-.announcements h3{
-  font-size: 25px;
+.announcements p4{
+  font-size: 20px;
   position: absolute;
-  bottom: 40px;
-  right: 1100px;
+  bottom: 15px;
+  right: 1117px;
+  text-shadow: 2px 2px 4px #000000;
+}
+.announcements p6{
+  font-size: 20px;
+  position: absolute;
+  bottom: 15px;
+  right: 1390px;
   text-shadow: 2px 2px 4px #000000;
 }
 .announcements p3{
   font-size: 20px;
   position: absolute;
   bottom: 35px;
-  right: 850px;
+  right: 840px;
   color: gray;
   text-shadow: 2px 2px 4px #000000;
 }
