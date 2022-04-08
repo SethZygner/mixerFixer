@@ -3,12 +3,14 @@ import {useRouter} from "vue-router";
 import {onAuthStateChanged} from "firebase/auth";
 import fire from "../firebase.js";
 import {ref} from "vue";
+import SignIn from "../components/SignIn.vue";
 
 const email = ref("");
 const userName = ref("");
 const password = ref("");
 const rePass = ref("");
 const router = useRouter();
+const signInView = ref(true);
 
 //Sign Up a New User and go
 //to the home page
@@ -22,8 +24,9 @@ function signUp(){
       onAuthStateChanged(auth, ()=>{
         console.log("New user added: " + auth.currentUser.uid);
         fire.addUser({
-          username:userName.value,
-          email: email.value
+          Username:userName.value,
+          Email: email.value,
+          Time: fire.timeStamp
         });
         email.value ="";
         password.value="";
@@ -36,15 +39,13 @@ function signUp(){
   }
 }
 
+
 </script>
 
 <template>
-  <div class="content">
-    <div class="leftSide">
-      <h1>Thirsty?<br>Get started!</h1>
-    </div>
 
-    <div class="rightSide">
+    <SignIn :class="signInView && 'hide'" />
+    <div class="content" :class="!signInView && 'hide'">
       <input type="text" v-model="userName" placeholder="Username">
       <br>
       <input type="email" v-model="email" placeholder="Enter email">
@@ -55,9 +56,8 @@ function signUp(){
       <br>
       <button @click="signUp">Sign Up</button>
       <br>
-      <p>Already have an account? <a href="#">Sign In</a></p>
+      <button @click="signInView = !signInView" style="background-color: white; color: black;">Sign In</button>
     </div>
-  </div>
 
 </template>
 
@@ -65,40 +65,29 @@ function signUp(){
 <style scoped>
 
 .content{
-  display: grid;
-  grid-template-columns: 700px 700px;
-  margin: 20px auto;
-  border: 1px black solid;
-  justify-content: center;
-  height: 500px;
-  gap: 20px;
-}
-
-.leftSide, .rightSide{
   text-align: center;
-  border: 1px black solid;
-  border-radius: 15px;
-  padding-top: 125px;
+  margin-top: 3em;
 }
 
-.rightSide input::placeholder{
+
+.content input::placeholder{
   color: black;
 }
 
 
-.rightSide input{
-  height: 40px;
-  width: 350px;
-  font-size: 20px;
+.content input{
+  height: 2em;
+  width: 20em;
+  font-size: 1.5em;
   text-align: center;
-  margin-top: 15px;
-  border-radius: 20px;
+  margin-top: 1em;
+  border-radius: 1.53em;
   background-color: rgba(0, 0, 0, .5);
   color: white;
   border: none;
 }
 
-.rightSide input:focus{
+.content input:focus{
   border: none;
 }
 
@@ -117,8 +106,8 @@ button:hover{
   cursor: pointer;
 }
 
-#consent{
-  border: 1px black solid;
+.hide{
+  display: none;
 }
 
 

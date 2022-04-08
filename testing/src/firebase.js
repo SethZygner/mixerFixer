@@ -1,13 +1,7 @@
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
-
-import { getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged
-} from "firebase/auth";
-
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import 'firebase/compat/auth';
 
 const config = {
@@ -22,6 +16,8 @@ const config = {
 
 firebase.initializeApp(config);
 
+
+let timeStamp = firebase.firestore.FieldValue.serverTimestamp();
 let db = firebase.firestore();
 let auth = getAuth();
 
@@ -54,12 +50,56 @@ function addUser(data){
 
 }
 
+//Testing
+function test(){
+    db.collection("Testing")
+        .doc()
+        .set({Time: timeStamp})
+        .catch((err)=>{
+            console.log("Failed to do this!!");
+        })
+}
+
+
+//Chat functions
+//TODO: Add cloud storage when possible for image uploads
+function commentOnAPIDrink (itemID, userID, comment){
+    db.collection("API Item Info")
+        .doc(itemID)
+        .collection("Comments")
+        .doc()
+        .set(
+            {
+                UID: userID,
+                UserComment: comment
+            })
+        .catch((err) => {
+            alert(err.message);
+        })
+}
+
+//Other functions
+function addApiToFavorites(docID){
+    db.collection("Users")
+        .doc(auth.currentUser.uid)
+        .collection("Favorites")
+        .doc(docID)
+        .set({
+            DrinkId: docID,
+            Date: timeStamp
+        }
+        ).catch((err)=>{
+            console.log(err.message);
+    })
+}
 
 
 export default{
     addUser,
     newUser,
     signOut,
+    signIn,
+    timeStamp,
     auth
 }
 

@@ -55,22 +55,34 @@ function clickedIngredient(index){
   if(map.size === 0){
     multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
     multipleIngredientUrl += (ingredients[0].at(index));
+    enteredIngredients(multipleIngredientUrl);
     map.set(ingredients[0].at(index), ingredients[0].at(index));
     view.value += ingredients[0].at(index);
-    console.log(view.value);
   }else{
     multipleIngredientUrl += ","+ingredients[0].at(index);
+    enteredIngredients(multipleIngredientUrl);
     view.value += ", " + ingredients[0].at(index);
-    console.log(view.value);
   }
+}
 
 
 
+function enteredIngredients(url){
+  fetch(url)
+  .then((response)=>{
+    return response.json();
+  })
+  .then((compData)=>{
+    console.info(compData)
+  })
+  .catch((err)=>{
+    console.log(err.message);
+  })
 }
 
 function clearIngredientList(){
   multipleIngredientUrl = "";
-  view = "";
+  view.value = "";
   map.clear();
 }
 
@@ -114,6 +126,7 @@ listIngredients();
   width: 200px;
   margin: 0 auto;
   background: url("../assets/images/specificBrowse.jpg");
+  position: absolute;
 
 }
 
