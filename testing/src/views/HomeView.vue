@@ -19,9 +19,6 @@ import {onAuthStateChanged} from "firebase/auth";
   <div class="wip">
     <img src="../assets/images/Image_1.png">
   </div>
-  <div>
-      <img id = "background1" src = "https://pbs.twimg.com/media/Drz_T0TUcAA0ugT?format=jpg&name=4096x4096">
-  </div>
 
 </template>
 
@@ -55,13 +52,5 @@ import {onAuthStateChanged} from "firebase/auth";
   border-radius: 15px;
   border: 3px black solid;
 }
-#background1 {
-  height: 100%;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  position: absolute;
-  bottom: 1px;
-  z-index: -300;
-}
+
 </style>
