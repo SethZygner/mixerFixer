@@ -11,11 +11,7 @@ let router = useRouter();
 function signIn(){
   if(email.value.trim() !== "" && password.value.trim() !== ""){
     fire.signIn(email.value, password.value);
-    onAuthStateChanged(fire.auth, ()=>{
-      email.value = "";
-      password.value = "";
-      router.push('/');
-    });
+    router.push('/');
 
   }else {
     alert("Invalid Parameters");

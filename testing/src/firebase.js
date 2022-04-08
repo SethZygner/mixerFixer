@@ -37,9 +37,6 @@ function signIn(email, password){
             alert(err.message);
         })
 }
-
-
-//Store data by making/using an existing collection
 function addUser(data){
     db.collection("Users")
         .doc(auth.currentUser.uid)
@@ -48,16 +45,6 @@ function addUser(data){
             console.log(err.message);
         })
 
-}
-
-//Testing
-function test(){
-    db.collection("Testing")
-        .doc()
-        .set({Time: timeStamp})
-        .catch((err)=>{
-            console.log("Failed to do this!!");
-        })
 }
 
 
@@ -78,7 +65,7 @@ function commentOnAPIDrink (itemID, userID, comment){
         })
 }
 
-//Other functions
+//Favorites functions
 function addApiToFavorites(docID){
     db.collection("Users")
         .doc(auth.currentUser.uid)

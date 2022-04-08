@@ -25,7 +25,6 @@ function signUp(){
         console.log("New user added: " + auth.currentUser.uid);
         fire.addUser({
           Username:userName.value,
-          Email: email.value,
           Time: fire.timeStamp
         });
         email.value ="";

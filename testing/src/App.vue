@@ -18,7 +18,6 @@ function checkIfSignedIn(){
   onMounted(()=>{
     onAuthStateChanged(auth, (user)=>{
       if(user){
-        console.log(fire.auth.currentUser.uid);
         isLoggedIn.value = true;
       }else{
         console.log("No user seen");
