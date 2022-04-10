@@ -48,7 +48,7 @@ reactive(checkIfSignedIn());
       <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
       <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
       <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
-      <li><RouterLink to="">Social<br>Hub</RouterLink></li>
+      <li><RouterLink to="/socialHub">Social<br>Hub</RouterLink></li>
       <li>
         <div>
           <RouterLink v-if="isLoggedIn.valueOf()" to="/Account" >Account</RouterLink>

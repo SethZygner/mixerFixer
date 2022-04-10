@@ -28,6 +28,11 @@ const router = createRouter({
       path: "/Account",
       name: "Account",
       component: () => import("../views/UserAccount.vue")
+    },
+    {
+      path: "/socialHub",
+      name: "socialHub",
+      component: () => import("../views/SocialHub.vue")
     }
   ],
 });
