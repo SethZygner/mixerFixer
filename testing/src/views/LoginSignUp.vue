@@ -45,9 +45,9 @@ function signUp(){
 
     <SignIn :class="signInView && 'hide'" />
     <div class="content" :class="!signInView && 'hide'">
-      <input type="text" v-model="userName" placeholder="Username">
+      <input maxlength="16" type="text" v-model="userName" placeholder="Username">
       <br>
-      <input type="email" v-model="email" placeholder="Enter email">
+      <input maxlength="35" type="email" v-model="email" placeholder="Enter email">
       <br>
       <input type="password" v-model="password" placeholder="Enter Password">
       <br>

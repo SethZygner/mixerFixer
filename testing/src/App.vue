@@ -32,40 +32,66 @@ reactive(checkIfSignedIn());
 
 </script>
 
+
+
+
+
+
+
+
 <template id="test">
-  <div id="side-bar">
-    <div class="social-media">
-      <img src="@/assets/icons/facebook-logo-1024x1024.png">
-      <img src="@/assets/icons/instagram.png">
-      <img id="twitter" src="@/assets/icons/Twitter-Logo.png">
+
+  <div class="allContent">
+    <div class="mainScreen">
+      <div id="side-bar">
+        <div class="social-media">
+          <img src="@/assets/icons/facebook-logo-1024x1024.png">
+          <img src="@/assets/icons/instagram.png">
+          <img id="twitter" src="@/assets/icons/Twitter-Logo.png">
+        </div>
+      </div>
+      <div id="menu">
+        <div class="constant clearfix">
+          <img id="logo" src="@/assets/images/mixerfixer.png" alt="Mixer Fixer">
+          <img id="hamburger" src="./assets/icons/hamburgerMenu.png" alt="Menu">
+        </div>
+
+        <ul>
+          <li style="padding-top: 10px"><RouterLink to="/">Home</RouterLink></li>
+          <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
+          <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
+          <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
+          <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
+          <li><RouterLink to="">Social<br>Hub</RouterLink></li>
+          <li>
+            <div>
+              <RouterLink v-if="isLoggedIn.valueOf()" to="/Account" >Account</RouterLink>
+              <RouterLink v-else to="/logInSignUp" >Login/<br>Sign Up</RouterLink>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <RouterView :key="$route.path" />
     </div>
   </div>
-  <div id="menu">
-    <img id="logo" src="@/assets/images/mixerfixer.png" alt="Mixer Fixer">
-    <ul>
-      <li style="padding-top: 10px"><RouterLink to="/">Home</RouterLink></li>
-      <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
-      <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
-      <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
-      <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
-      <li><RouterLink to="">Social<br>Hub</RouterLink></li>
-      <li>
-        <div>
-          <RouterLink v-if="isLoggedIn.valueOf()" to="/Account" >Account</RouterLink>
-          <RouterLink v-else to="/logInSignUp" >Login<br>/Sign Up</RouterLink>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <RouterView :key="$route.path" />
+
 </template>
+
+
+
+
+
+
+
+
+
 
 <style scoped>
 
+
 #side-bar{
   width: 80px;
-  height: 2000px;
-  border-right: 3px darkgrey solid;
+  height: 300em;
   margin-top: 80px;
   float: left;
   color: white;
@@ -100,6 +126,11 @@ reactive(checkIfSignedIn());
   top: 20px;
 }
 
+
+
+/*
+Menu Style
+ */
 #menu{
   margin: 0 auto;
   background-color: rgba(0, 0, 0, .7);
@@ -138,13 +169,37 @@ reactive(checkIfSignedIn());
   color: darkorange !important;
 }
 
-@media screen and (max-width: 320px){
+#hamburger{
+  display: none;
+  width: 3em;
+  height: auto;
+  margin-top: 1em;
+}
+
+#hamburger:hover{
+  cursor: pointer;
+}
+
+
+
+
+/*
+Adapt to resolutions
+ */
+@media screen and (max-width: 1140px){
   #side-bar{
     display: none;
   }
-
   #logo{
     width: 50px;
+  }
+
+  #menu ul{
+    display: none;
+  }
+  #hamburger{
+    display: block;
+    float: right;
   }
 }
 
