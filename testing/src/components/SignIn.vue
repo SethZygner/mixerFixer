@@ -22,7 +22,7 @@ function signIn(){
 </script>
 
 <template>
-  <div class="content">
+  <div class="main_content">
     <input type="email" v-model="email" placeholder="Email">
     <br>
     <input type="password" v-model="password" placeholder="Password">
@@ -33,7 +33,7 @@ function signIn(){
 
 <style scoped>
 
-.content{
+.main_content{
   text-align: center;
   z-index: -50;
   position: absolute;
@@ -64,7 +64,7 @@ input{
   border: none;
 }
 
-.content input::placeholder{
+.main_content input::placeholder{
   color: black;
 }
 

@@ -1,10 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged} from "firebase/auth";
 import {onMounted, reactive, ref} from "vue";
 import fire from "./firebase.js";
 
@@ -36,9 +32,6 @@ reactive(checkIfSignedIn());
 
 
 
-
-
-
 <template id="test">
   <div class="allContent">
     <div class="mainScreen">
@@ -56,7 +49,7 @@ reactive(checkIfSignedIn());
         </div>
 
         <ul>
-          <li style="padding-top: 10px"><RouterLink to="/">Home</RouterLink></li>
+          <li style="margin-top: 1em;"><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
           <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
           <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>

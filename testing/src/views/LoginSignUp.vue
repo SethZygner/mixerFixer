@@ -44,7 +44,7 @@ function signUp(){
 <template>
 
     <SignIn :class="signInView && 'hide'" />
-    <div class="content" :class="!signInView && 'hide'">
+    <div class="main_content" :class="!signInView && 'hide'">
       <input maxlength="16" type="text" v-model="userName" placeholder="Username">
       <br>
       <input maxlength="35" type="email" v-model="email" placeholder="Enter email">
@@ -63,18 +63,18 @@ function signUp(){
 
 <style scoped>
 
-.content{
+.main_content{
   text-align: center;
   margin-top: 3em;
 }
 
 
-.content input::placeholder{
+.main_content input::placeholder{
   color: black;
 }
 
 
-.content input{
+.main_content input{
   height: 2em;
   width: 20em;
   font-size: 1.5em;
@@ -86,7 +86,7 @@ function signUp(){
   border: none;
 }
 
-.content input:focus{
+.main_content input:focus{
   border: none;
 }
 
