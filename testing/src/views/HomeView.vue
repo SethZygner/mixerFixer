@@ -4,18 +4,6 @@ import {ref, reactive, computed, onMounted, watch} from "vue";
 import fire from "../firebase.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-let height, width = ref("");
-
-
-function getResolution(){
-  height = window.innerHeight.valueOf();
-  width = window.innerWidth.valueOf();
-  console.log("Height: "+height+"px, Width: "+width+"px.");
-}
-
-window.addEventListener('keypress', getResolution);
-
-
 
 
 </script>

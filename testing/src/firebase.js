@@ -1,8 +1,10 @@
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
+import {ref, reactive} from "vue";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import 'firebase/compat/auth';
+
 
 const config = {
     apiKey: "AIzaSyCucMeDhjzc8ajC4hmbkyeIJMiK8FzB5wI",
@@ -17,7 +19,6 @@ const config = {
 firebase.initializeApp(config);
 
 
-let timeStamp = firebase.firestore.FieldValue.serverTimestamp();
 let db = firebase.firestore();
 let auth = getAuth();
 
@@ -46,6 +47,9 @@ function addUser(data){
         })
 
 }
+async function checkIfUserIsSignedIn(){
+    return auth.currentUser !== null;
+}
 
 
 //Chat functions
@@ -65,19 +69,30 @@ function commentOnAPIDrink (itemID, userID, comment){
         })
 }
 
+/*
+async function getAllInfo(){
+    const snapshots = await db.collection("Users").get()
+    console.log(snapshots.docs.map(doc => doc.data().Username));
+}
+ */
+
+
 //Favorites functions
 function addApiToFavorites(docID){
-    db.collection("Users")
-        .doc(auth.currentUser.uid)
-        .collection("Favorites")
-        .doc(docID)
-        .set({
-            DrinkId: docID,
-            Date: timeStamp
-        }
-        ).catch((err)=>{
+    if(auth.currentUser !== null){
+        db.collection("Users")
+            .doc(auth.currentUser.uid)
+            .collection("Favorites")
+            .doc(docID)
+            .set({
+                    DrinkId: docID
+                }
+            ).catch((err)=>{
             console.log(err.message);
-    })
+        })
+    }else{
+        alert("Sign in to add to favorites!")
+    }
 }
 
 
@@ -86,7 +101,7 @@ export default{
     newUser,
     signOut,
     signIn,
-    timeStamp,
+    checkIfUserIsSignedIn,
     auth
 }
 

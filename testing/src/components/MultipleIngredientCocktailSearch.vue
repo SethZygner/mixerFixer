@@ -22,13 +22,15 @@ let ingredientsListUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i
 let multipleIngredientUrl = "";
 let ingredientsHidden = ref(true);
 let view = ref("");
+let map = new Map();
+
+
 /*
 First, we will create some functions.
 The first one should be used to list all the
 ingredients that can be used and put them in an
 assortment so that the user can choose from each
  */
-
 
 //These 2 functions get all the ingredients
 function extractIngredientElements(arr, prop){
@@ -48,9 +50,9 @@ function listIngredients(){
 }
 
 
-let map = new Map();
-//When an ingredient is clicked
 
+
+//When an ingredient is clicked
 function clickedIngredient(index){
   if(map.size === 0){
     multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
@@ -66,7 +68,7 @@ function clickedIngredient(index){
 }
 
 
-
+//Get drinks that match the ingredients
 function enteredIngredients(url){
   fetch(url)
   .then((response)=>{
@@ -80,14 +82,12 @@ function enteredIngredients(url){
   })
 }
 
+//Clear ingredients
 function clearIngredientList(){
   multipleIngredientUrl = "";
   view.value = "";
   map.clear();
 }
-
-
-
 
 
 
@@ -98,10 +98,10 @@ listIngredients();
 </script>
 
 <template>
-
+  <!--
   <div class="ShowButton" @click="ingredientsHidden = !ingredientsHidden">Browse<br>Specific<br>Ingredients</div>
   <div id="ingredientContainer" :class="ingredientsHidden && 'hide'">
-    <div class="showIng">
+    <div class="showImg">
       <div>{{view}}</div>
 
     </div>
@@ -112,13 +112,16 @@ listIngredients();
       </div>
     </div>
   </div>
+  -->
+
+
 
 
 
 </template>
 
 <style scoped>
-
+/*
 .ShowButton{
   border: 1px black solid;
   border-radius: 10px;
@@ -126,11 +129,10 @@ listIngredients();
   width: 200px;
   margin: 0 auto;
   background: url("../assets/images/specificBrowse.jpg");
-  position: absolute;
 
 }
 
-.showIng{
+.showImg{
   border: 1px black solid;
   width: 18em;
   height: 2em;
@@ -178,6 +180,11 @@ listIngredients();
 .hide{
   display: none !important;
 }
+ */
+
+
+
+
 
 
 </style>

@@ -1,11 +1,14 @@
 <script setup>
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import fire from "../firebase.js";
 import { RouterLink } from "vue-router";
 import {onAuthStateChanged} from "firebase/auth";
 
 let textArea = ref("");
+let array = reactive([]);
 let signedIn;
+
+
 
 if(fire.auth.currentUser === null){
   signedIn = false;
@@ -14,7 +17,6 @@ if(fire.auth.currentUser === null){
   signedIn = true;
   console.log("Signed In")
 }
-
 
 
 </script>
@@ -44,40 +46,33 @@ if(fire.auth.currentUser === null){
     -->
 
   <div class="main_content">
+
+
+    <div class="social_chat">
+
+    </div>
+
     <div class="game_section">
       <div>
-        <img src="../assets/icons/DrinkingGameIcon.png">
+        <img src="../assets/icons/ShareDrink.png" alt="">
+        <p>Share a drink</p>
+      </div>
+      <div>
+        <img src="../assets/icons/Discover.png" alt="">
+        <p>Discover User Drinks</p>
+      </div>
+
+      <div>
+        <img src="../assets/icons/RevisedCreateGame.jpg" alt="">
         <p>Drinking Games</p>
       </div>
       <div>
-        <p>Something Else</p>
-      </div>
-      <div>
-        <p>Another</p>
-      </div>
-      <div>
-        <p>Another</p>
-      </div>
-
-      <div>
-        <p>Another</p>
-      </div>
-      <div>
-        <p>Another</p>
+        <img src="../assets/icons/DrinkingGameIcon.png">
+        <p>Create A Game</p>
       </div>
 
     </div>
 
-    <div class="social_chat">
-      <div id="showChat">
-        Stuff
-      </div>
-      <div class="chatBox">
-        <textarea :disabled="signedIn === false" maxlength="200" rows="3"></textarea>
-        <p :class="signedIn && 'hide'" class="signUpPrompt"><RouterLink to="/logInSignUp">Sign Up</RouterLink> to socialize!</p>
-      </div>
-
-    </div>
 
     <div class="options">
 
@@ -92,7 +87,7 @@ if(fire.auth.currentUser === null){
 
 .main_content{
   display: grid;
-  grid-template-columns: 25% 50% 25%;
+  grid-template-columns: 28% 44% 28%;
   width: 90%;
   height: 35em;
   margin: 2em auto;
@@ -102,10 +97,19 @@ if(fire.auth.currentUser === null){
   display: grid;
   grid-template-columns: 50% 50%;
   text-align: center;
+  padding-top: 5em;
+  column-gap: .5em;
+  justify-content: center;
+
+
 }
 
 .game_section div{
   height: 10em;
+  border: 1px black solid;
+  width: auto;
+  border-radius: 15px;
+  padding: .3em;
 }
 
 .game_section div img{
@@ -113,36 +117,6 @@ if(fire.auth.currentUser === null){
   height: auto;
 }
 
-.hide{
-  display: none;
-}
-
-.social_chat{
-  text-align: center;
-}
-
-.social_chat textarea{
-  resize: none;
-  padding: 1em;
-  width: 80%;
-  border-radius: 1em;
-  border: none;
-  height: 5%;
-
-}
-
-.signUpPrompt{
-  position: relative;
-  bottom: 4em;
-}
-
-
-#showChat{
-  height: 80%;
-  margin: 1em;
-  background-color: white;
-  border-radius: 10px;
-}
 
 
 </style>
