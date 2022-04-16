@@ -18,9 +18,13 @@ const config = {
 
 firebase.initializeApp(config);
 
+let userId;
 
 let db = firebase.firestore();
-let auth = getAuth();
+let auth = getAuth().onAuthStateChanged((user)=>{
+    userId = user.uid;
+});
+//let userId = await auth.currentUser.uid;
 
 //Authorization functions
 function newUser(email, password){
@@ -49,6 +53,38 @@ function addUser(data){
 }
 async function checkIfUserIsSignedIn(){
     return auth.currentUser !== null;
+}
+
+
+function getUserInfo(Type){
+
+    if(auth() !== null){
+        switch (Type) {
+            case "Username":
+                setTimeout(()=>{
+                    db.collection("Users")
+                        .doc(userId)
+                        .get()
+                        .then((result)=>{
+                            let usernameString = result.data().Username;
+                            console.info(usernameString);
+                            console.log(usernameString.toString());
+                            return usernameString.toString();
+                        })
+                },500);
+                break;
+            case "APIFavorites":
+                db.collection("Users")
+                    .doc(userId)
+                    .collection("APIFavorites")
+                    .get()
+                    .then((result)=>{
+                        console.log("Finish this in APIFavorites: " + result);
+                    })
+        }
+
+
+    }
 }
 
 
@@ -101,7 +137,7 @@ export default{
     newUser,
     signOut,
     signIn,
-    checkIfUserIsSignedIn,
+    getUserInfo,
     auth
 }
 

@@ -1,9 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { getAuth, onAuthStateChanged} from "firebase/auth";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, defineAsyncComponent} from "vue";
 import fire from "./firebase.js";
-
 
 
 let isLoggedIn = ref(false);

@@ -98,7 +98,7 @@ listIngredients();
 </script>
 
 <template>
-  <!--
+
   <div class="ShowButton" @click="ingredientsHidden = !ingredientsHidden">Browse<br>Specific<br>Ingredients</div>
   <div id="ingredientContainer" :class="ingredientsHidden && 'hide'">
     <div class="showImg">
@@ -112,7 +112,7 @@ listIngredients();
       </div>
     </div>
   </div>
-  -->
+
 
 
 
@@ -121,7 +121,7 @@ listIngredients();
 </template>
 
 <style scoped>
-/*
+
 .ShowButton{
   border: 1px black solid;
   border-radius: 10px;
@@ -129,6 +129,7 @@ listIngredients();
   width: 200px;
   margin: 0 auto;
   background: url("../assets/images/specificBrowse.jpg");
+  position: absolute;
 
 }
 
@@ -180,7 +181,7 @@ listIngredients();
 .hide{
   display: none !important;
 }
- */
+
 
 
 
