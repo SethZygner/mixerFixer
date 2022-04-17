@@ -17,15 +17,10 @@ const config = {
 
 firebase.initializeApp(config);
 
-<<<<<<< Updated upstream
 
-let db = firebase.firestore();
-let auth = getAuth();
-=======
 let db = firebase.firestore();
 let auth = firebase.auth;
 
->>>>>>> Stashed changes
 
 //Authorization functions
 function newUser(email, password){
@@ -103,7 +98,6 @@ export default{
     newUser,
     signOut,
     signIn,
-    checkIfUserIsSignedIn,
     auth
 }
 
