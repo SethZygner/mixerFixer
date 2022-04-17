@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
-import {ref, reactive} from "vue";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import 'firebase/compat/auth';
 
 
@@ -18,9 +17,15 @@ const config = {
 
 firebase.initializeApp(config);
 
+<<<<<<< Updated upstream
 
 let db = firebase.firestore();
 let auth = getAuth();
+=======
+let db = firebase.firestore();
+let auth = firebase.auth;
+
+>>>>>>> Stashed changes
 
 //Authorization functions
 function newUser(email, password){
@@ -46,9 +51,6 @@ function addUser(data){
             console.log(err.message);
         })
 
-}
-async function checkIfUserIsSignedIn(){
-    return auth.currentUser !== null;
 }
 
 

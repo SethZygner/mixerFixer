@@ -8,6 +8,8 @@ let textArea = ref("");
 let array = reactive([]);
 let signedIn;
 
+let serverAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
+
 
 
 if(fire.auth.currentUser === null){
@@ -49,12 +51,13 @@ if(fire.auth.currentUser === null){
 
 
     <div class="social_chat">
-
+      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
     </div>
 
     <div class="game_section">
       <div>
-        <img src="../assets/icons/ShareDrink.png" alt="">
+        <img src="../assets/icons/ShareDrink2.jpg" alt="">
         <p>Share a drink</p>
       </div>
       <div>
@@ -67,7 +70,7 @@ if(fire.auth.currentUser === null){
         <p>Drinking Games</p>
       </div>
       <div>
-        <img src="../assets/icons/DrinkingGameIcon.png">
+        <img style="width: 8em;" src="../assets/icons/DrinkingGameIcon2.png">
         <p>Create A Game</p>
       </div>
 

@@ -51,7 +51,6 @@ reactive(checkIfSignedIn());
         <ul>
           <li style="margin-top: 1em;"><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
-          <li><RouterLink to="/randomCocktails">Random<br>Cocktails</RouterLink></li>
           <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
           <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
           <li><RouterLink to="/socialHub">Social<br>Hub</RouterLink></li>
