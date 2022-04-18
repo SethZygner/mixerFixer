@@ -104,92 +104,88 @@ function test(index){
       })
       .then((compData)=>{
         drinkInfo.push(compData);
-        //console.info(drinkInfo[0].drinks[0].strDrink);
-        let state = drinkInfo[0].drinks[0];
-
-        //Gets all relevant info
-        let drinkObject = {
-          Name: state.strDrink,
-          Picture: state.strDrinkThumb,
-          ...state.strIngredient1 && state.strIngredient1!=="" && {IngMes1:
-                {
-                  Ing: state.strIngredient1,
-                  Measurement: state.strMeasure1
-                }},
-          ...state.strIngredient2 && state.strIngredient2!=="" && {IngMes2:
-                {
-                  Ing: state.strIngredient2,
-                  Measurement: state.strMeasure2
-                }},
-          ...state.strIngredient3 && state.strIngredient3!=="" && {IngMes3:
-                {
-                  Ing: state.strIngredient3,
-                  Measurement: state.strMeasure3
-                }},
-          ...state.strIngredient4 && state.strIngredient4!=="" && {IngMes4:
-                {
-                  Ing: state.strIngredient4,
-                  Measurement: state.strMeasure4
-                }},
-          ...state.strIngredient5 && state.strIngredient5!=="" && {IngMes5:
-                {
-                  Ing: state.strIngredient5,
-                  Measurement: state.strMeasure5
-                }},
-          ...state.strIngredient6 && state.strIngredient6!=="" && {IngMes6:
-                {
-                  Ing: state.strIngredient6,
-                  Measurement: state.strMeasure6
-                }},
-          ...state.strIngredient7 && state.strIngredient7!=="" && {IngMes7:
-                {
-                  Ing: state.strIngredient7,
-                  Measurement: state.strMeasure7
-                }},
-          ...state.strIngredient8 && state.strIngredient8!=="" && {IngMes8:
-                {
-                  Ing: state.strIngredient8,
-                  Measurement: state.strMeasure8
-                }},
-          ...state.strIngredient9 && state.strIngredient9!=="" && {IngMes9:
-                {
-                  Ing: state.strIngredient9,
-                  Measurement: state.strMeasure9
-                }},
-          ...state.strIngredient10 && state.strIngredient10!=="" && {IngMes10:
-                {
-                  Ing: state.strIngredient10,
-                  Measurement: state.strMeasure10
-                }},
-          ...state.strIngredien11 && state.strIngredient11!=="" && {IngMes11:
-                {
-                  Ing: state.strIngredient11,
-                  Measurement: state.strMeasure11
-                }},
-          ...state.strIngredient12 && state.strIngredient12!=="" && {IngMes12:
-                {
-                  Ing: state.strIngredient12,
-                  Measurement: state.strMeasure12
-                }},
-          ...state.strIngredient13 && state.strIngredient13!=="" && {IngMes13:
-                {
-                  Ing: state.strIngredient13,
-                  Measurement: state.strMeasure13
-                }},
-          ...state.strIngredient14 && state.strIngredient14!=="" && {IngMes14:
-                {
-                  Ing: state.strIngredient14,
-                  Measurement: state.strMeasure14
-                }},
-          ...state.strIngredient15 && state.strIngredient15!=="" && {IngMes15:
-                {
-                  Ing: state.strIngredient15,
-                  Measurement: state.strMeasure15
-                }}
-        }
-        drinkInfo.length = 0;
-        drinkInfo.push(drinkObject);
         console.log(drinkInfo);
+        // //Gets all relevant info
+        // let drinkObject = {
+        //   Name: state.strDrink,
+        //   Picture: state.strDrinkThumb,
+        //   Instructions: state.strInstructions,
+        //   ...state.strIngredient1 && state.strIngredient1!=="" && {IngMes1:
+        //         {
+        //           Ing: state.strIngredient1,
+        //           Measurement: state.strMeasure1
+        //         }},
+        //   ...state.strIngredient2 && state.strIngredient2!=="" && {IngMes2:
+        //         {
+        //           Ing: state.strIngredient2,
+        //           Measurement: state.strMeasure2
+        //         }},
+        //   ...state.strIngredient3 && state.strIngredient3!=="" && {IngMes3:
+        //         {
+        //           Ing: state.strIngredient3,
+        //           Measurement: state.strMeasure3
+        //         }},
+        //   ...state.strIngredient4 && state.strIngredient4!=="" && {IngMes4:
+        //         {
+        //           Ing: state.strIngredient4,
+        //           Measurement: state.strMeasure4
+        //         }},
+        //   ...state.strIngredient5 && state.strIngredient5!=="" && {IngMes5:
+        //         {
+        //           Ing: state.strIngredient5,
+        //           Measurement: state.strMeasure5
+        //         }},
+        //   ...state.strIngredient6 && state.strIngredient6!=="" && {IngMes6:
+        //         {
+        //           Ing: state.strIngredient6,
+        //           Measurement: state.strMeasure6
+        //         }},
+        //   ...state.strIngredient7 && state.strIngredient7!=="" && {IngMes7:
+        //         {
+        //           Ing: state.strIngredient7,
+        //           Measurement: state.strMeasure7
+        //         }},
+        //   ...state.strIngredient8 && state.strIngredient8!=="" && {IngMes8:
+        //         {
+        //           Ing: state.strIngredient8,
+        //           Measurement: state.strMeasure8
+        //         }},
+        //   ...state.strIngredient9 && state.strIngredient9!=="" && {IngMes9:
+        //         {
+        //           Ing: state.strIngredient9,
+        //           Measurement: state.strMeasure9
+        //         }},
+        //   ...state.strIngredient10 && state.strIngredient10!=="" && {IngMes10:
+        //         {
+        //           Ing: state.strIngredient10,
+        //           Measurement: state.strMeasure10
+        //         }},
+        //   ...state.strIngredien11 && state.strIngredient11!=="" && {IngMes11:
+        //         {
+        //           Ing: state.strIngredient11,
+        //           Measurement: state.strMeasure11
+        //         }},
+        //   ...state.strIngredient12 && state.strIngredient12!=="" && {IngMes12:
+        //         {
+        //           Ing: state.strIngredient12,
+        //           Measurement: state.strMeasure12
+        //         }},
+        //   ...state.strIngredient13 && state.strIngredient13!=="" && {IngMes13:
+        //         {
+        //           Ing: state.strIngredient13,
+        //           Measurement: state.strMeasure13
+        //         }},
+        //   ...state.strIngredient14 && state.strIngredient14!=="" && {IngMes14:
+        //         {
+        //           Ing: state.strIngredient14,
+        //           Measurement: state.strMeasure14
+        //         }},
+        //   ...state.strIngredient15 && state.strIngredient15!=="" && {IngMes15:
+        //         {
+        //           Ing: state.strIngredient15,
+        //           Measurement: state.strMeasure15
+        //         }}
+        // }
         drinkHasBeenSelected.value = true;
       })
       .catch((err)=>{
@@ -253,11 +249,85 @@ loadingGif();
 
     </div>
 
-    <div v-if="drinkHasBeenSelected" v-for="drink in drinkInfo[0]" @click="tryThis(drinkInfo[0].Name)" class="testing">
-      <div class="clearfix exit" style="width: 100%; text-align: right"><h2 @click="exitOut" style="margin-right: 2em">X</h2></div>
-      <h1>{{drinkInfo[0].Name}}</h1>
-      <img :src=drinkInfo[0].Picture alt="">
+    <div v-if="drinkHasBeenSelected" v-for="drink in drinkInfo[0]" class="testing">
+      <div class="clearfix exit" style="width: 100%; height: 3em; border: 1px orange solid; text-align: right;"><h2 @click="exitOut" style="margin-right: 2em; float: right; width: 3em;">X</h2></div>
+      <div class="fullContent">
+        <div class="ingredients">
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient1 != null">{{drinkInfo[0].drinks[0].strIngredient1}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure1 != null">{{drinkInfo[0].drinks[0].strMeasure1}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient2 != null">{{drinkInfo[0].drinks[0].strIngredient2}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure2 != null">{{drinkInfo[0].drinks[0].strMeasure2}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient3 != null">{{drinkInfo[0].drinks[0].strIngredient3}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure3 != null">{{drinkInfo[0].drinks[0].strMeasure3}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient4 != null">{{drinkInfo[0].drinks[0].strIngredient4}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure4 != null">{{drinkInfo[0].drinks[0].strMeasure4}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient5 != null">{{drinkInfo[0].drinks[0].strIngredient5}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure5 != null">{{drinkInfo[0].drinks[0].strMeasure5}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient6 != null">{{drinkInfo[0].drinks[0].strIngredient6}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure6 != null">{{drinkInfo[0].drinks[0].strMeasure6}}</p>drinkInfo
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient7 != null">{{drinkInfo[0].drinks[0].strIngredient7}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure7 != null">{{drinkInfo[0].drinks[0].strMeasure7}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient8 != null">{{drinkInfo[0].drinks[0].strIngredient8}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure8 != null">{{drinkInfo[0].drinks[0].strMeasure8}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient9 != null">{{drinkInfo[0].drinks[0].strIngredient9}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure9 != null">{{drinkInfo[0].drinks[0].strMeasure9}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient10 != null">{{drinkInfo[0].drinks[0].strIngredient10}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure10 != null">{{drinkInfo[0].drinks[0].strMeasure10}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient11 != null">{{drinkInfo[0].drinks[0].strIngredient11}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure11 != null">{{drinkInfo[0].drinks[0].strMeasure11}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient12 != null">{{drinkInfo[0].drinks[0].strIngredient12}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure12 != null">{{drinkInfo[0].drinks[0].strMeasure12}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient13 != null">{{drinkInfo[0].drinks[0].strIngredient13}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure13 != null">{{drinkInfo[0].drinks[0].strMeasure13}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient14 != null">{{drinkInfo[0].drinks[0].strIngredient14}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure14 != null">{{drinkInfo[0].drinks[0].strMeasure14}}</p>
+          </div>
+          <div class="clearfix">
+            <p v-if="drinkInfo[0].drinks[0].strIngredient15 != null">{{drinkInfo[0].drinks[0].strIngredient15}}</p>
+            <p v-if="drinkInfo[0].drinks[0].strMeasure15 != null">{{drinkInfo[0].drinks[0].strMeasure15}}</p>
+          </div>
+        </div>
+
+
+        <div>
+          <h1>{{drinkInfo[0].drinks[0].strDrink}}</h1>
+          <img :src=drinkInfo[0].drinks[0].strDrinkThumb alt="">
+        </div>
+
+
+        <div class="instructions">
+          <p>{{drinkInfo[0].drinks[0].strInstructions}}</p>
+        </div>
+      </div>
     </div>
+
   </div>
 
 
@@ -270,7 +340,7 @@ loadingGif();
 .testing{
   width: 60em;
   height: 35em;
-  background-color: rgba(0, 0, 0, .35);
+  background-color: rgba(0, 0, 0, .85);
   position: fixed;
   left: 0;
   right: 0;
@@ -279,6 +349,35 @@ loadingGif();
   z-index: 10;
   color: white;
   border-radius: 10px;
+
+}
+
+.fullContent{
+  display: grid;
+  grid-template-columns: 35% 30% 35%;
+}
+
+.ingredients, .instructions{
+  background-color: #B447CC;
+  width: 80%;
+  height: 60%;
+  overflow: scroll;
+  overflow-x: hidden;
+  border-radius: 10px;
+  margin: 2em;
+}
+
+
+
+
+
+.ingredients::-webkit-scrollbar, .instructions::-webkit-scrollbar{
+  display: none;
+}
+
+.ingredients div{
+  display: grid;
+  grid-template-columns: 50% 50%;
 }
 
 .testing img{
@@ -349,6 +448,10 @@ div{
   height: 32em;
   margin: 0 auto;
   overflow: scroll;
+}
+
+.list div img:hover{
+  cursor: pointer;
 }
 
 .list::-webkit-scrollbar{
