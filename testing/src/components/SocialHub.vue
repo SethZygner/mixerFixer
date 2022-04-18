@@ -50,11 +50,6 @@ if(fire.auth.currentUser === null){
   <div class="main_content">
 
 
-    <div class="social_chat">
-      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"
-              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-    </div>
-
     <div class="game_section">
       <div>
         <img src="../assets/icons/ShareDrink2.jpg" alt="">
@@ -76,10 +71,11 @@ if(fire.auth.currentUser === null){
 
     </div>
 
-
-    <div class="options">
-
+    <div class="social_chat">
+      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
     </div>
+
 
   </div>
 
@@ -90,9 +86,12 @@ if(fire.auth.currentUser === null){
 
 .main_content{
   display: grid;
-  grid-template-columns: 28% 44% 28%;
+  grid-template-columns: 60% 40%;
   width: 90%;
+  text-align: center;
+  justify-content: center;
   height: 35em;
+  border: 1px black solid;
   margin: 2em auto;
 }
 
@@ -102,6 +101,7 @@ if(fire.auth.currentUser === null){
   text-align: center;
   padding-top: 5em;
   column-gap: .5em;
+  width: 90%;
   justify-content: center;
 
 

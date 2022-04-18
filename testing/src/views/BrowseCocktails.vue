@@ -10,7 +10,9 @@ document.title = "Browse Cocktails";
 
 //Variables
 let apiKey = "9973533";
-let  testing = ref(true);
+let drinkInfo = reactive([]);
+let testing = ref(true);
+let drinkHasBeenSelected = ref(false);
 let ingredients = reactive([]);
 let ingredientInput = ref("");
 
@@ -79,6 +81,7 @@ function enteredIngredients(url){
 function clearIngredients(){
   ingArray.length = 0;
   listedDrinks.length = 0;
+  drinkHasBeenSelected.value = false;
   ingredientInput.value = "";
 
 }
@@ -90,6 +93,117 @@ function loadingGif(){
   }, 1000);
 }
 
+
+//Get all relevant information about the drink clicked
+function test(index){
+  drinkInfo.length = 0;
+  let getByNameUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="+ listedDrinks[0][index].Name+"&api_key=1";
+  fetch(getByNameUrl)
+      .then((result)=>{
+        return result.json();
+      })
+      .then((compData)=>{
+        drinkInfo.push(compData);
+        //console.info(drinkInfo[0].drinks[0].strDrink);
+        let state = drinkInfo[0].drinks[0];
+
+        //Gets all relevant info
+        let drinkObject = {
+          Name: state.strDrink,
+          Picture: state.strDrinkThumb,
+          ...state.strIngredient1 && state.strIngredient1!=="" && {IngMes1:
+                {
+                  Ing: state.strIngredient1,
+                  Measurement: state.strMeasure1
+                }},
+          ...state.strIngredient2 && state.strIngredient2!=="" && {IngMes2:
+                {
+                  Ing: state.strIngredient2,
+                  Measurement: state.strMeasure2
+                }},
+          ...state.strIngredient3 && state.strIngredient3!=="" && {IngMes3:
+                {
+                  Ing: state.strIngredient3,
+                  Measurement: state.strMeasure3
+                }},
+          ...state.strIngredient4 && state.strIngredient4!=="" && {IngMes4:
+                {
+                  Ing: state.strIngredient4,
+                  Measurement: state.strMeasure4
+                }},
+          ...state.strIngredient5 && state.strIngredient5!=="" && {IngMes5:
+                {
+                  Ing: state.strIngredient5,
+                  Measurement: state.strMeasure5
+                }},
+          ...state.strIngredient6 && state.strIngredient6!=="" && {IngMes6:
+                {
+                  Ing: state.strIngredient6,
+                  Measurement: state.strMeasure6
+                }},
+          ...state.strIngredient7 && state.strIngredient7!=="" && {IngMes7:
+                {
+                  Ing: state.strIngredient7,
+                  Measurement: state.strMeasure7
+                }},
+          ...state.strIngredient8 && state.strIngredient8!=="" && {IngMes8:
+                {
+                  Ing: state.strIngredient8,
+                  Measurement: state.strMeasure8
+                }},
+          ...state.strIngredient9 && state.strIngredient9!=="" && {IngMes9:
+                {
+                  Ing: state.strIngredient9,
+                  Measurement: state.strMeasure9
+                }},
+          ...state.strIngredient10 && state.strIngredient10!=="" && {IngMes10:
+                {
+                  Ing: state.strIngredient10,
+                  Measurement: state.strMeasure10
+                }},
+          ...state.strIngredien11 && state.strIngredient11!=="" && {IngMes11:
+                {
+                  Ing: state.strIngredient11,
+                  Measurement: state.strMeasure11
+                }},
+          ...state.strIngredient12 && state.strIngredient12!=="" && {IngMes12:
+                {
+                  Ing: state.strIngredient12,
+                  Measurement: state.strMeasure12
+                }},
+          ...state.strIngredient13 && state.strIngredient13!=="" && {IngMes13:
+                {
+                  Ing: state.strIngredient13,
+                  Measurement: state.strMeasure13
+                }},
+          ...state.strIngredient14 && state.strIngredient14!=="" && {IngMes14:
+                {
+                  Ing: state.strIngredient14,
+                  Measurement: state.strMeasure14
+                }},
+          ...state.strIngredient15 && state.strIngredient15!=="" && {IngMes15:
+                {
+                  Ing: state.strIngredient15,
+                  Measurement: state.strMeasure15
+                }}
+        }
+        drinkInfo.length = 0;
+        drinkInfo.push(drinkObject);
+        console.log(drinkInfo);
+        drinkHasBeenSelected.value = true;
+      })
+      .catch((err)=>{
+        console.info(err.message);
+      })
+
+
+}
+
+function exitOut(){
+  drinkHasBeenSelected.value = false;
+}
+
+
 //Initial Function Calls
 loadingGif();
 
@@ -98,25 +212,31 @@ loadingGif();
 <template>
   <div class="wholePage">
     <div>
-      <div class="buttonControls clearfix">
-        <button class="randomButton" @click="loadingGif">Generate<br>Random</button>
+      <div  class="buttonControls">
+        <input placeholder="Add an Ingredient..."
+               @keydown.enter="enterIngredient(ingredientInput)"
+               v-model="ingredientInput"
+               type="text" style="float: right; margin-right: 5em; width: 25em; height: 2.7em; border-radius: 10px;
+                border: none; text-align: center; font-size: 1.2em">
       </div>
 
-      <div class="findCocktail">
+      <div class="findCocktail" >
         <div class="filter">
-          <input placeholder="Press ENTER"
-                 @keydown.enter="enterIngredient(ingredientInput)"
-                 v-model="ingredientInput"
-                 type="text">
+
           <div v-for="item in ingArray">{{item}}</div>
           <br>
           <button @click="clearIngredients">Clear</button>
         </div>
 
-        <div class="list">
-          <div v-for="drink in listedDrinks[0]">
+        <div v-if="listedDrinks.length === 0">
+          <div>
+            <h1>Make some drinks using<br>the search bar!</h1>
+          </div>
+        </div>
+        <div v-else class="list">
+          <div  v-for="drink in listedDrinks[0]">
             <p>{{drink.Name}}</p>
-            <img style="width:13em; border-radius: 10px" :src=drink.Picture alt="">
+            <img @click="test(listedDrinks[0].indexOf(drink))" style="width:13em; border-radius: 10px" :src=drink.Picture alt="">
           </div>
         </div>
       </div>
@@ -127,16 +247,49 @@ loadingGif();
         <LoadingComponent />
       </div>
       <div v-else>
+        <button  class="randomButton" @click="loadingGif">Generate Random</button>
         <RandomCocktail />
       </div>
 
     </div>
+
+    <div v-if="drinkHasBeenSelected" v-for="drink in drinkInfo[0]" @click="tryThis(drinkInfo[0].Name)" class="testing">
+      <div class="clearfix exit" style="width: 100%; text-align: right"><h2 @click="exitOut" style="margin-right: 2em">X</h2></div>
+      <h1>{{drinkInfo[0].Name}}</h1>
+      <img :src=drinkInfo[0].Picture alt="">
+    </div>
   </div>
+
+
 
 
 </template>
 
 <style scoped>
+
+.testing{
+  width: 60em;
+  height: 35em;
+  background-color: rgba(0, 0, 0, .35);
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  z-index: 10;
+  color: white;
+  border-radius: 10px;
+}
+
+.testing img{
+  width:13em;
+  border-radius: 10px;
+  height: auto;
+}
+
+.exit h2:hover{
+  cursor: pointer;
+}
 
 div{
   margin-top: 20px;
@@ -155,13 +308,9 @@ div{
 
 .buttonControls{
   width: 100%;
-  height: 3em;
+  height: 4em;
 }
 
-.randomButton{
-  float: right;
-  margin-right: 3em;
-}
 
 .findCocktail{
   display: grid;
@@ -170,10 +319,22 @@ div{
   margin: 0;
 }
 
+.filter{
+  height: 30em;
+  background-color: rgba(0, 0, 0, .6);
+  border-radius: 10px;
+  color: white;
+}
 
 .randomButton{
-  height: 3em;
-  width: 8em;
+  height: 4em;
+  width: 10em;
+  margin-left: 3em;
+  margin-top: -2em;
+  border-radius: 10px;
+  border: 2px black solid;
+  background-color: rgba(180, 71, 204, .7);
+  color: white;
 }
 
 .RandomView div{

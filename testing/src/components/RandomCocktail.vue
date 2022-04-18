@@ -19,8 +19,8 @@ let requestOptions = {
   redirect: "follow",
 };
 
-function fetchRandomCocktail(){
-  fetch(`${url}`, requestOptions)
+async function fetchRandomCocktail(){
+  await fetch(`${url}`, requestOptions)
       .then((response) => {
         return response.json();
       })
@@ -156,19 +156,6 @@ img{
   width: 16em;
   height: auto;
 }
-
-.randomButton{
-  margin: .0625em auto;
-  height: 3.125em;
-  display: block;
-  width: 6.25em;
-  text-align: center;
-  border-radius: 10px;
-  background-color: royalblue;
-  color: white;
-}
-
-
 
 .ingredientLabel{
   border-top: 3px purple solid;
