@@ -1,113 +1,97 @@
 
 <script setup>
-//Imports
+
 import RandomCocktail from "../components/RandomCocktail.vue";
-import {defineAsyncComponent, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import LoadingComponent from "../components/loadingScreenShaker.vue";
-import fire from "../firebase.js";
 
 
+document.title = "Browse Cocktails";
 
 //Variables
 let apiKey = "9973533";
-
 let  testing = ref(true);
-
 let ingredients = reactive([]);
+let ingredientInput = ref("");
 
-let requestOptions ={
-  method: "GET",
-  redirect: "follow"
-};
-
-
-let ingredientsListUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list";
+//let ingredientsListUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list";
 let multipleIngredientUrl = "";
-let ingredientsHidden = ref(true);
 let view = ref("");
-let map = new Map();
+let ingArray = reactive([]);
+let listedDrinks = reactive([]);
 
 
-/*
-First, we will create some functions.
-The first one should be used to list all the
-ingredients that can be used and put them in an
-assortment so that the user can choose from each
- */
+function extractSpecifics(arr, prop, prop2){
+  let extractedValue = arr.map((item) => {
+    let name = item[prop];
+    let picture = item[prop2];
 
-//These 2 functions get all the ingredients
-function extractIngredientElements(arr, prop){
-  let extractedValue = arr.map(item => item[prop]);
-  ingredients.push(extractedValue.sort());
+    let drinkObject = {
+      Name: name,
+      Picture: picture
+    }
+
+    return drinkObject;
+
+  });
+  listedDrinks.push(extractedValue);
   return extractedValue;
 }
-function listIngredients(){
-  fetch(ingredientsListUrl, requestOptions)
-      .then((response)=>{
-        return response.json();
-      })
-      .then((completedData)=>{
-        ingredients.length = 0;
-        extractIngredientElements(completedData.drinks, "strIngredient1");
-      })
-}
 
-
-
-
-//When an ingredient is clicked
-function clickedIngredient(index){
-  if(map.size === 0){
-    multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
-    multipleIngredientUrl += (ingredients[0].at(index));
-    enteredIngredients(multipleIngredientUrl);
-    map.set(ingredients[0].at(index), ingredients[0].at(index));
-    view.value += ingredients[0].at(index);
+function enterIngredient(ing){
+  if(ingredientInput.value.trim() !== ""){
+    if(ingArray.length === 0){
+      multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
+      multipleIngredientUrl += ing.trim();
+      enteredIngredients(multipleIngredientUrl);
+      ingArray.push(ing.trim());
+      ingredientInput.value = "";
+      console.log(ingArray);
+    }else{
+      multipleIngredientUrl += ","+ing.trim();
+      ingArray.push(ing.trim());
+      ingredientInput.value = "";
+      console.log(ingArray);
+      enteredIngredients(multipleIngredientUrl);
+    }
   }else{
-    multipleIngredientUrl += ","+ingredients[0].at(index);
-    enteredIngredients(multipleIngredientUrl);
-    view.value += ", " + ingredients[0].at(index);
+    ingredientInput.value = "";
+    alert("Must enter a valid ingredient!");
   }
-}
 
+}
 
 //Get drinks that match the ingredients
 function enteredIngredients(url){
+  listedDrinks.length = 0;
   fetch(url)
       .then((response)=>{
         return response.json();
       })
       .then((compData)=>{
-        console.info(compData)
+        extractSpecifics(compData.drinks, "strDrink", "strDrinkThumb");
       })
       .catch((err)=>{
         console.log(err.message);
       })
 }
 
-//Clear ingredients
-function clearIngredientList(){
-  multipleIngredientUrl = "";
-  view.value = "";
-  map.clear();
+function clearIngredients(){
+  ingArray.length = 0;
+  listedDrinks.length = 0;
+  ingredientInput.value = "";
+
 }
 
-
-function poo(){
+function loadingGif(){
   testing.value = false;
   setTimeout(()=>{
     testing.value = true;
   }, 1000);
 }
 
-
-
 //Initial Function Calls
-poo();
-listIngredients();
-
-document.title = "Browse Cocktails";
-
+loadingGif();
 
 </script>
 
@@ -115,12 +99,26 @@ document.title = "Browse Cocktails";
   <div class="wholePage">
     <div>
       <div class="buttonControls clearfix">
-        <button class="randomButton" @click="poo">Generate<br>Random</button>
-        <button class="findCocktailButton">Find Cocktail</button>
+        <button class="randomButton" @click="loadingGif">Generate<br>Random</button>
       </div>
 
-      <div class="list_of_drinks">
+      <div class="findCocktail">
+        <div class="filter">
+          <input placeholder="Press ENTER"
+                 @keydown.enter="enterIngredient(ingredientInput)"
+                 v-model="ingredientInput"
+                 type="text">
+          <div v-for="item in ingArray">{{item}}</div>
+          <br>
+          <button @click="clearIngredients">Clear</button>
+        </div>
 
+        <div class="list">
+          <div v-for="drink in listedDrinks[0]">
+            <p>{{drink.Name}}</p>
+            <img style="width:13em; border-radius: 10px" :src=drink.Picture alt="">
+          </div>
+        </div>
       </div>
 
     </div>
@@ -152,6 +150,7 @@ div{
 
 .wholePage div{
   text-align: center;
+
 }
 
 .buttonControls{
@@ -164,12 +163,15 @@ div{
   margin-right: 3em;
 }
 
-.findCocktailButton{
-  float: left;
-  margin-left: 3em;
+.findCocktail{
+  display: grid;
+  grid-template-columns: 30% 70%;
+  height: 100%;
+  margin: 0;
 }
 
-.findCocktailButton, .randomButton{
+
+.randomButton{
   height: 3em;
   width: 8em;
 }
@@ -177,6 +179,19 @@ div{
 .RandomView div{
   text-align: center;
   margin-top: 0;
+}
+
+.list{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 100%;
+  height: 32em;
+  margin: 0 auto;
+  overflow: scroll;
+}
+
+.list::-webkit-scrollbar{
+  display: none;
 }
 
 </style>
