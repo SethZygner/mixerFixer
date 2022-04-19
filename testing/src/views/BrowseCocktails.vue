@@ -370,7 +370,7 @@ loadingGif();
 
 .fullContent{
   display: grid;
-  grid-template-columns: 35% 30% 35%;
+  grid-template-columns: 37.5% 25% 37.5%;
 }
 
 .ingredients, .instructions{
@@ -381,10 +381,8 @@ loadingGif();
   overflow-x: hidden;
   border-radius: 10px;
   margin: 2em;
+  padding: .5em;
 }
-
-
-
 
 
 .ingredients::-webkit-scrollbar, .instructions::-webkit-scrollbar{
