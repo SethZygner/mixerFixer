@@ -249,70 +249,86 @@ loadingGif();
 
     </div>
 
-    <div v-if="drinkHasBeenSelected" v-for="drink in drinkInfo[0]" class="testing">
-      <div class="clearfix exit" style="width: 100%; height: 3em; border: 1px orange solid; text-align: right;"><h2 @click="exitOut" style="margin-right: 2em; float: right; width: 3em;">X</h2></div>
+    <div v-if="drinkHasBeenSelected" class="testing">
+      <div class="clearfix exit" style="width: 100%; text-align: right;"><h2 @click="exitOut" style="margin-right: 2em;  width: 3em;">X</h2></div>
       <div class="fullContent">
         <div class="ingredients">
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient1 != null">{{drinkInfo[0].drinks[0].strIngredient1}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure1 != null">{{drinkInfo[0].drinks[0].strMeasure1}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient2 != null">{{drinkInfo[0].drinks[0].strIngredient2}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure2 != null">{{drinkInfo[0].drinks[0].strMeasure2}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient3 != null">{{drinkInfo[0].drinks[0].strIngredient3}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure3 != null">{{drinkInfo[0].drinks[0].strMeasure3}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient4 != null">{{drinkInfo[0].drinks[0].strIngredient4}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure4 != null">{{drinkInfo[0].drinks[0].strMeasure4}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient5 != null">{{drinkInfo[0].drinks[0].strIngredient5}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure5 != null">{{drinkInfo[0].drinks[0].strMeasure5}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient6 != null">{{drinkInfo[0].drinks[0].strIngredient6}}</p>
-            <p v-if="drinkInfo[0].drinks[0].strMeasure6 != null">{{drinkInfo[0].drinks[0].strMeasure6}}</p>drinkInfo
+            <p v-if="drinkInfo[0].drinks[0].strMeasure6 != null">{{drinkInfo[0].drinks[0].strMeasure6}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient7 != null">{{drinkInfo[0].drinks[0].strIngredient7}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure7 != null">{{drinkInfo[0].drinks[0].strMeasure7}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient8 != null">{{drinkInfo[0].drinks[0].strIngredient8}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure8 != null">{{drinkInfo[0].drinks[0].strMeasure8}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient9 != null">{{drinkInfo[0].drinks[0].strIngredient9}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure9 != null">{{drinkInfo[0].drinks[0].strMeasure9}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient10 != null">{{drinkInfo[0].drinks[0].strIngredient10}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure10 != null">{{drinkInfo[0].drinks[0].strMeasure10}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient11 != null">{{drinkInfo[0].drinks[0].strIngredient11}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure11 != null">{{drinkInfo[0].drinks[0].strMeasure11}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient12 != null">{{drinkInfo[0].drinks[0].strIngredient12}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure12 != null">{{drinkInfo[0].drinks[0].strMeasure12}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient13 != null">{{drinkInfo[0].drinks[0].strIngredient13}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure13 != null">{{drinkInfo[0].drinks[0].strMeasure13}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient14 != null">{{drinkInfo[0].drinks[0].strIngredient14}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure14 != null">{{drinkInfo[0].drinks[0].strMeasure14}}</p>
           </div>
+
           <div class="clearfix">
             <p v-if="drinkInfo[0].drinks[0].strIngredient15 != null">{{drinkInfo[0].drinks[0].strIngredient15}}</p>
             <p v-if="drinkInfo[0].drinks[0].strMeasure15 != null">{{drinkInfo[0].drinks[0].strMeasure15}}</p>
           </div>
+
         </div>
 
 
@@ -360,7 +376,7 @@ loadingGif();
 .ingredients, .instructions{
   background-color: #B447CC;
   width: 80%;
-  height: 60%;
+  height: 23em;
   overflow: scroll;
   overflow-x: hidden;
   border-radius: 10px;
