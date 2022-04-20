@@ -35,13 +35,6 @@ reactive(checkIfSignedIn());
 <template id="test">
   <div class="allContent">
     <div class="mainScreen">
-<!--      <div id="side-bar">-->
-<!--        <div class="social-media">-->
-<!--          <img src="@/assets/icons/facebook-logo-1024x1024.png">-->
-<!--          <img src="@/assets/icons/instagram.png">-->
-<!--          <img id="twitter" src="@/assets/icons/Twitter-Logo.png">-->
-<!--        </div>-->
-<!--      </div>-->
       <div id="menu">
         <div class="constant clearfix">
           <img id="logo" src="@/assets/images/mixerfixer.png" alt="Mixer Fixer">
@@ -51,8 +44,6 @@ reactive(checkIfSignedIn());
         <ul>
           <li style="margin-top: 1em;"><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
-          <li><RouterLink to="">Favorite<br>Cocktails</RouterLink></li>
-          <li><RouterLink to="">My<br>Cabinet</RouterLink></li>
           <li><RouterLink to="/socialHub">Social<br>Hub</RouterLink></li>
           <li>
             <div>
@@ -80,34 +71,6 @@ reactive(checkIfSignedIn());
 <style scoped>
 
 
-#side-bar{
-  width: 80px;
-  height: 300em;
-  margin-top: 80px;
-  float: left;
-  color: white;
-  text-align: center;
-  background-color: rgba(0, 0, 0, .7);
-}
-
-#side-bar h2{
-  margin-top: -70px;
-}
-
-.social-media{
-  margin-top: 420px;
-}
-
-.social-media img{
-  width: 45px;
-  height: auto;
-  margin-top: 20px;
-}
-
-#twitter{
-  width: 80px;
-  height: auto;
-}
 
 #logo{
   width: 120px;
