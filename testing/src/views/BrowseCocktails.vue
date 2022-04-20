@@ -35,7 +35,6 @@ let multipleIngredientUrl; //Initialize the URL for function "enterIngredient(in
 function enterIngredient(ing){
 
 
-
   if(ingredientInput.value.trim() !== ""){ //This "if" statement checks if the input the user made is valid (not empty)
 
     //Because the URL needs to have commas, this will check if the "ingArray" is empty and if it is,
@@ -176,6 +175,9 @@ function exitOut(){
 //Initial Function Calls (for initial things to happen)
 loadingGif();
 
+
+
+
 </script>
 
 
@@ -241,11 +243,11 @@ loadingGif();
         <div v-else class="list">
 
           <!-- For every drink in listedDrinks at index 0, get the "Name" and "Picture" to display in a div -->
-          <div  v-for="drink in listedDrinks[0]">
+          <div class="drinkInList"  v-for="drink in listedDrinks[0]">
             <p>{{drink.Name}}</p>
 
             <!-- This image grab is possible due to Vue3's ":src" attribute -->
-            <img @click="selectedDrink(listedDrinks[0].indexOf(drink))" style="width:13em; border-radius: 10px" :src=drink.Picture alt="">
+            <img @click="selectedDrink(listedDrinks[0].indexOf(drink))" style="width:13em; border: 3px solid purple; border-radius: 10px" :src=drink.Picture alt="">
           </div>
 
         </div>
@@ -399,6 +401,8 @@ loadingGif();
 
 <style scoped>
 
+
+/* Whole page styling */
 .wholePage{
   display: grid;
   grid-template-columns: 65% 35%;
@@ -412,7 +416,7 @@ loadingGif();
 
 
 
-
+/* Styling for the drink selected display */
 .exit h2:hover{
   cursor: pointer;
 }
@@ -472,6 +476,7 @@ loadingGif();
 
 
 
+/* Specific ingredient part of page styling */
 .leftPage{
   margin-top: 2em;
 }
@@ -497,9 +502,24 @@ loadingGif();
   margin-left: 2em;
 }
 
+.drinkInList{
+  text-align: center;
+}
+
+.drinkInList p{
+  border: 2px solid purple ;
+  background-color: rgba(180, 71, 204, .7);
+  border-radius: 5px;
+  width: 80%;
+  height: 2em;
+  margin: 0 auto -.7em auto;
+  color: white;
+}
+
 .list{
   display: grid;
   grid-template-columns: 50% 50%;
+  row-gap: 2em;
   width: 100%;
   height: 32em;
   margin: 0 auto;
@@ -508,6 +528,7 @@ loadingGif();
 
 .list div img:hover{
   cursor: pointer;
+  border: 3px solid dodgerblue !important;
 }
 
 .list::-webkit-scrollbar{
@@ -521,7 +542,7 @@ loadingGif();
 
 
 
-
+/* Random Cocktail view styling */
 .RandomView{
   margin-top: 2em;
 }

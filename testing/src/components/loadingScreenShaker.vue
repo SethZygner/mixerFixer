@@ -12,7 +12,7 @@
 
 <style scoped>
   div img{
-    width: 10em;
+    width: 17em;
     height: auto;
   }
   div{

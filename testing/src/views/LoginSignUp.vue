@@ -10,8 +10,7 @@ const userName = ref("");
 const password = ref("");
 const rePass = ref("");
 const router = useRouter();
-const signInView = ref(true);
-const Date = new Date();
+let signInView = ref(true);
 
 //Sign Up a New User and go
 //to the home page
@@ -25,8 +24,7 @@ function signUp(){
       onAuthStateChanged(auth, ()=>{
         console.log("New user added: " + auth.currentUser.uid);
         fire.addUser({
-          Username:userName.value,
-          Date: Date
+          Username:userName.value
         });
         email.value ="";
         password.value="";

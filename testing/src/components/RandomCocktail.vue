@@ -3,9 +3,10 @@
 <script setup>
 import { ref,reactive } from 'vue';
 
-//Makes the title reactive
-const state = reactive({ drinks: {} });
-let url = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+
+const state = reactive({ drinks: {} }); //Allows the state of the API to change in real time and update
+
+let url = "https://www.thecocktaildb.com/api/json/v1/1/random.php"; //Gets the URL for the random cocktail
 
 
 //Sets the result to
@@ -14,32 +15,35 @@ function setResults(results){
 }
 
 
-let requestOptions = {
-  method: "GET",
-  redirect: "follow",
-};
+
 
 async function fetchRandomCocktail(){
-  await fetch(`${url}`, requestOptions)
+  await fetch(url)
       .then((response) => {
         return response.json();
       })
       .then(setResults)
-      .catch((error) => console.log("Error", error));
+      .catch((error) => alert(error));
 }
 
 
+
+//Initial Functions
 fetchRandomCocktail();
+
+
 </script>
 
 
 <template>
 
+
+      <!-- For an explination of this template, take a look at ./ -->
       <div v-if="state.drinks != null && state.drinks.drinks != null && state.drinks.drinks[0] != null" class="fullInfo">
         <div>
           <h1>{{state.drinks.drinks[0].strDrink}}</h1>
           <img id="randomImage" :src=state.drinks.drinks[0].strDrinkThumb alt="Image here">
-          <!--<button @click="fetchRandomCocktail" class="randomButton">Randomize</button>-->
+
         </div>
         <div>
           <div class="ingredientLabel">

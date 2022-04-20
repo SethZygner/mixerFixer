@@ -35,13 +35,13 @@ reactive(checkIfSignedIn());
 <template id="test">
   <div class="allContent">
     <div class="mainScreen">
-      <div id="side-bar">
-        <div class="social-media">
-          <img src="@/assets/icons/facebook-logo-1024x1024.png">
-          <img src="@/assets/icons/instagram.png">
-          <img id="twitter" src="@/assets/icons/Twitter-Logo.png">
-        </div>
-      </div>
+<!--      <div id="side-bar">-->
+<!--        <div class="social-media">-->
+<!--          <img src="@/assets/icons/facebook-logo-1024x1024.png">-->
+<!--          <img src="@/assets/icons/instagram.png">-->
+<!--          <img id="twitter" src="@/assets/icons/Twitter-Logo.png">-->
+<!--        </div>-->
+<!--      </div>-->
       <div id="menu">
         <div class="constant clearfix">
           <img id="logo" src="@/assets/images/mixerfixer.png" alt="Mixer Fixer">

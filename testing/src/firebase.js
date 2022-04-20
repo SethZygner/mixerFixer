@@ -19,7 +19,7 @@ firebase.initializeApp(config);
 
 
 let db = firebase.firestore();
-let auth = firebase.auth;
+let auth = getAuth();
 
 
 //Authorization functions
