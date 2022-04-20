@@ -38,7 +38,7 @@ fetchRandomCocktail();
 <template>
 
 
-      <!-- For an explination of this template, take a look at ./ -->
+      <!-- For an explanation of this template, take a look at  -->
       <div v-if="state.drinks != null && state.drinks.drinks != null && state.drinks.drinks[0] != null" class="fullInfo">
         <div>
           <h1>{{state.drinks.drinks[0].strDrink}}</h1>

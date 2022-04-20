@@ -40,6 +40,7 @@ function enterIngredient(ing){
     //Because the URL needs to have commas, this will check if the "ingArray" is empty and if it is,
     //this means that there will be no commas necessary for the first ingredient entered
     if(ingArray.length === 0){
+
       multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i="; //Adds URL
 
       multipleIngredientUrl += ing.trim(); //Eliminate spaces of the ingredient entered and adds it to the URL
@@ -174,7 +175,6 @@ function exitOut(){
 
 //Initial Function Calls (for initial things to happen)
 loadingGif();
-
 
 
 
