@@ -27,6 +27,7 @@ function signOut(){
         <div class="clearfix" id="topInfo">
           <h2>Some Username</h2>
           <button>Follow</button>
+          <button @click="signOut">Sign Out</button>
         </div>
 
         <div class="clearfix" id="middleInfo">
