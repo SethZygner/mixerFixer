@@ -4,9 +4,9 @@ import fire from "../firebase.js";
 import { RouterLink } from "vue-router";
 import {onAuthStateChanged} from "firebase/auth";
 
-let textArea = ref("");
 let array = reactive([]);
 let signedIn;
+
 
 let serverAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
 

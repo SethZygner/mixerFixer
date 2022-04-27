@@ -1,6 +1,7 @@
 <script setup>
 import {useRouter} from "vue-router";
 import fire from "../firebase.js";
+import {reactive, ref} from "vue";
 const router = useRouter();
 
 
@@ -8,7 +9,9 @@ const router = useRouter();
 function signOut(){
   fire.signOut();
   router.push("/");
+
 }
+
 
 
 </script>

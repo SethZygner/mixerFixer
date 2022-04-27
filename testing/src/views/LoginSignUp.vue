@@ -40,7 +40,8 @@ function signUp(){
       onAuthStateChanged(auth, ()=>{//When the authorization event has a change, then it will add a user to firebase
 
 
-        fire.addUser({
+        fire.addUser(
+            {
 
           Username:userName.value
         });

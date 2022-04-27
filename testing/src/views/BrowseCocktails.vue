@@ -3,6 +3,7 @@
 //Grabbing imports to use in this file
 import RandomCocktail from "../components/RandomCocktail.vue";
 import {reactive, ref} from "vue";
+import fire from "../firebase.js";
 import LoadingComponent from "../components/loadingScreenShaker.vue";
 
 //This simply changes the title shown in the tab when opened in an explorer of some kind
@@ -11,10 +12,16 @@ document.title = "Browse Cocktails";
 SE: means "Self Explanatory"
  */
 
+if (fire.auth === null){
+  console.log("User is null");
+}
+
 
 
 //Variables
 let apiKey = "9973533";  //SE
+
+let isLiked = ref(false);
 
 let drinkInfo = reactive([]); //All drink information needed based on ingredients chosen
 
@@ -84,7 +91,7 @@ function sendEnteredIngredientsURL(url){
       .then((compData)=>{
 
         //Takes completed data and gets specific path "drinks" for the array and specifies which keys it wants to pull
-        extractSpecifics(compData.drinks, "strDrink", "strDrinkThumb");
+        extractSpecifics(compData.drinks, "strDrink", "strDrinkThumb", "idDrink");
       })
       .catch((err)=>{
         alert(err.message); //SE
@@ -95,13 +102,15 @@ function sendEnteredIngredientsURL(url){
 
 
 //Gets the specific Name and Picture for each drink listed
-function extractSpecifics(arr, prop, prop2){
+function extractSpecifics(arr, prop, prop2, prop3){
   let extractedValue = arr.map((item) => {
     let name = item[prop];
     let picture = item[prop2];
+    let theID = item[prop3];
     return {
       Name: name,
-      Picture: picture
+      Picture: picture,
+      ID: theID
     };
   });
   listedDrinks.push(extractedValue);
@@ -146,6 +155,8 @@ function selectedDrink(index){
   //[column][row]. So in column 0, find row (index)
   let getByNameUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="+ listedDrinks[0][index].Name+"&api_key=1";
 
+  favorites(parseInt(listedDrinks[0][index].ID));
+
   //Fetches the new URL made above
   fetch(getByNameUrl)
       .then((result)=>{
@@ -155,16 +166,65 @@ function selectedDrink(index){
 
         drinkInfo.push(compData); //Once completed, the compData (completed data) is then put into the "drinkInfo" array.
 
+
         drinkHasBeenSelected.value = true; //Allows the display of the drink selected to show along with its information
       })
       .catch((err)=>{
         alert(err.message);//SE
       })
-
-
 }
 
 
+
+
+//This function checks if the item is already favorite
+function favorites(drinkId){
+
+  try{
+    isLiked.value = false;
+    let liked = fire.db.collection("Users")
+        .doc(fire.auth.currentUser.uid)
+        .collection("APIFavorites")
+        .get();
+
+    liked.then((result)=>{
+      result.forEach((doc)=>{
+        if(parseInt(doc.id) === drinkId){
+          isLiked.value = true;
+          return isLiked.value = true;
+
+        }
+      })
+
+    })
+  }catch(err){
+    console.log(err.message);
+  }
+
+}
+
+function addToFavorites(docID, drink){
+  fire.addApiToFavorites(docID, drink);
+
+  favorites(parseInt(docID));
+
+  isLiked.value = true;
+
+}
+
+function removeFromFavorites(docID){
+  try{
+    fire.db.collection("Users")
+        .doc(fire.auth.currentUser.uid)
+        .collection("APIFavorites")
+        .doc(docID).delete();
+  }catch(err){
+    console.log(err.message);
+  }
+
+  isLiked.value = false;
+
+}
 
 
 //Exits from the display shown for the selected drink
@@ -179,10 +239,6 @@ loadingGif();
 
 
 </script>
-
-
-
-
 
 <template>
 
@@ -212,6 +268,7 @@ loadingGif();
 
       <!-- "findCocktailArea" is where all the display for ingredients entered and listed drinks are  -->
       <div class="findCocktailArea" >
+
 
         <!-- Shows the ingredients entered in real time -->
         <div class="filterDisplay">
@@ -247,7 +304,12 @@ loadingGif();
             <p>{{drink.Name}}</p>
 
             <!-- This image grab is possible due to Vue3's ":src" attribute -->
-            <img @click="selectedDrink(listedDrinks[0].indexOf(drink))" style="width:13em; border: 3px solid purple; border-radius: 10px" :src=drink.Picture alt="">
+            <img @click="selectedDrink(listedDrinks[0].indexOf(drink))"
+                 style="width:13em; border: 3px solid purple;
+                 border-radius: 10px"
+                 :src=drink.Picture alt=""
+
+            >
           </div>
 
         </div>
@@ -276,10 +338,13 @@ loadingGif();
 
 
 
-
-
     <!-- The "v-if" states that if a drink has been selected, then show this div -->
-    <div v-if="drinkHasBeenSelected" class="selectedDrinkDisplay">
+    <div v-if="drinkHasBeenSelected" class="selectedDrinkDisplay" >
+
+
+      <button v-if="!isLiked" @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">Save to Favorites</button>
+      <button v-else @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">Unsave</button>
+
 
       <!-- This is a simple 'X' so the user can exit out of the drink display -->
       <div class="clearfix exit" style="width: 100%; text-align: right;"><h2 @click="exitOut" style="margin-right: 2em;  width: 3em;">X</h2></div>
@@ -561,6 +626,11 @@ loadingGif();
 .RandomView div{
   text-align: center;
   margin-top: 0;
+}
+
+
+.hide{
+  display: none;
 }
 
 

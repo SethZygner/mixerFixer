@@ -1,8 +1,8 @@
-import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import firebase from "firebase/compat";
-import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
+import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import 'firebase/compat/auth';
+import {reactive, ref} from "vue";
 
 
 const config = {
@@ -19,7 +19,9 @@ firebase.initializeApp(config);
 
 
 let db = firebase.firestore();
-let auth = getAuth();
+let auth = reactive(getAuth());
+
+
 
 
 //Authorization functions
@@ -30,14 +32,21 @@ function newUser(email, password){
         })
 }
 function signOut(){
-    auth.signOut();
+    auth.signOut().then(r => console.log(r));
 }
 function signIn(email, password){
     signInWithEmailAndPassword(auth, email, password)
+        .then((result)=>{
+            console.log(result);
+            console.log(auth.currentUser.uid);
+        })
         .catch((err)=>{
             alert(err.message);
         })
 }
+
+
+
 function addUser(data){
     db.collection("Users")
         .doc(auth.currentUser.uid)
@@ -47,6 +56,7 @@ function addUser(data){
         })
 
 }
+
 
 
 //Chat functions
@@ -74,17 +84,35 @@ async function getAllInfo(){
  */
 
 
+async function getUserInfo(){
+    try {
+       const name = await db.collection("Users")
+            .doc(auth.currentUser.uid)
+            .get()
+            .then((result)=>{
+                return result.data();
+            }).then((compData)=>{
+                return compData.Username;
+            })
+
+        console.log(name);
+
+    }catch (err){
+
+    }
+
+
+}
+
 //Favorites functions
-function addApiToFavorites(docID){
+function addApiToFavorites(docId, drink){
     if(auth.currentUser !== null){
         db.collection("Users")
             .doc(auth.currentUser.uid)
-            .collection("Favorites")
-            .doc(docID)
-            .set({
-                    DrinkId: docID
-                }
-            ).catch((err)=>{
+            .collection("APIFavorites")
+            .doc(docId)
+            .set(drink)
+            .catch((err)=>{
             console.log(err.message);
         })
     }else{
@@ -92,12 +120,57 @@ function addApiToFavorites(docID){
     }
 }
 
+let checkBoolean = ref(true);
+
+function checkAPIFavorite(drinkId){
+    if(auth.currentUser !== null){
+        let arr = [];
+        db.collection("Users")
+            .doc(auth.currentUser.uid)
+            .collection("APIFavorites")
+            .get()
+            .then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    arr.push(doc.id);
+                })
+
+                if(arr.includes(drinkId)){
+                    console.log(arr);
+                    checkBoolean.value = true;
+                }else{
+                    console.log(arr);
+                    checkBoolean.value = false;
+                }
+            })
+    }
+
+}
+
+function addUserDrinkFavorites(docId, drink){
+    if(auth.currentUser !== null){
+        db.collection("Users")
+            .doc(auth.currentUser.uid)
+            .collection("UserFavorites")
+            .doc(docId)
+            .set(drink)
+            .catch((err)=>{
+                console.log(err.message);
+            })
+    }else{
+        alert("Sign in to add to favorites!")
+    }
+}
+
+
 
 export default{
     addUser,
     newUser,
     signOut,
     signIn,
+    getUserInfo,
+    addApiToFavorites,
+    db,
     auth
 }
 
