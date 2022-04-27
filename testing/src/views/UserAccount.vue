@@ -13,6 +13,49 @@ function signOut(){
 }
 
 
+let APIFavorites = reactive([]);
+let userName = ref("");
+
+
+async function getInfoOfUser(){
+  try{
+    await fire.db.collection("Users")
+        .doc(fire.auth.currentUser.uid)
+        .get()
+        .then((info)=>{
+          userName.value = info.data().Username;
+        })
+    await getSavedAPIDrinks();
+  }catch(err){
+    console.log(err.message);
+  }
+
+}
+
+async function getSavedAPIDrinks(){
+  APIFavorites.length = 0;
+  await fire.db.collection("Users")
+  .doc(fire.auth.currentUser.uid)
+  .collection("APIFavorites")
+  .get()
+  .then((result)=>{
+    result.forEach((doc)=>{
+      let info = {
+        Name: doc.data().strDrink,
+        Image: doc.data().strDrinkThumb
+      }
+      APIFavorites.push(info);
+    })
+  })
+  .then(()=>{
+    console.log(APIFavorites);
+  })
+}
+
+
+getInfoOfUser();
+
+
 
 </script>
 
@@ -28,7 +71,7 @@ function signOut(){
       <div class="publicInformation">
 
         <div class="clearfix" id="topInfo">
-          <h2>Some Username</h2>
+          <h2>{{ userName }}</h2>
           <button>Follow</button>
           <button @click="signOut">Sign Out</button>
         </div>
@@ -55,11 +98,15 @@ function signOut(){
 
   <div class="personalDrinkStuff">
 
-    <div id="drinksMade">
+    <div id="favoriteDrinks">
+      <div style="text-align: center" v-for="drink in APIFavorites">
+        <p>{{drink.Name}}</p>
+        <img :src="drink.Image" :alt="drink.Name">
+      </div>
 
     </div>
 
-    <div id="favoriteDrinks">
+    <div id="drinksMade">
 
     </div>
 
@@ -148,6 +195,22 @@ function signOut(){
   display: grid;
   grid-template-columns: 50% 50%;
   height: 20em;
+}
+
+#favoriteDrinks{
+  overflow: scroll;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+#favoriteDrinks::-webkit-scrollbar{
+  display: none;
+}
+
+#favoriteDrinks div img{
+  width: 10em;
+  border-radius: 6px;
 }
 
 </style>

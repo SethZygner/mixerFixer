@@ -342,12 +342,16 @@ loadingGif();
     <div v-if="drinkHasBeenSelected" class="selectedDrinkDisplay" >
 
 
-      <button v-if="!isLiked" @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">Save to Favorites</button>
-      <button v-else @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">Unsave</button>
+
 
 
       <!-- This is a simple 'X' so the user can exit out of the drink display -->
-      <div class="clearfix exit" style="width: 100%; text-align: right;"><h2 @click="exitOut" style="margin-right: 2em;  width: 3em;">X</h2></div>
+        <div class="clearfix exit" style="width: 100%; text-align: center;">
+          <h2 @click="exitOut" style="margin-right: 2em; float: left;  width: 3em;">X</h2>
+          <img style="width: 4em; position: relative; right: 3.7em;  border: none;" src="../assets/icons/unSaved.png" v-if="!isLiked" @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">
+          <img src="../assets/icons/saved.png" style="width: 4em; position: relative; right: 3.7em;  border: none" v-else @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">
+        </div>
+
 
       <!-- "fullContent" shows everything relevant for the selected drink and is shown in grid fashion as ingredients->picture and name->
        instructions-->
