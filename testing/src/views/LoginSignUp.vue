@@ -43,7 +43,12 @@ function signUp(){
         fire.addUser(
             {
 
-          Username:userName.value
+              Username:userName.value,
+              Bio: "",
+              Followers: 0,
+              Following: 0,
+              DrinksMade: 0,
+              GamesMade: 0
         });
 
         //This then clears all inputs just for looks pretty much

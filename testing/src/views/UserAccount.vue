@@ -1,7 +1,10 @@
 <script setup>
 import {useRouter} from "vue-router";
 import fire from "../firebase.js";
-import {reactive, ref} from "vue";
+
+
+import {onMounted, reactive, ref} from "vue";
+import {onAuthStateChanged} from "firebase/auth";
 const router = useRouter();
 
 
@@ -14,18 +17,68 @@ function signOut(){
 
 
 let APIFavorites = reactive([]);
-let userName = ref("");
+
+let hasBio = ref(true);
+
+let userBio = ref("");
+
+let changeBio = ref(false);
+
+let info = reactive([]);
+
+
+function addBio(){
+  changeBio.value = true;
+
+  hasBio.value = true;
+
+}
 
 
 async function getInfoOfUser(){
   try{
-    await fire.db.collection("Users")
-        .doc(fire.auth.currentUser.uid)
-        .get()
-        .then((info)=>{
-          userName.value = info.data().Username;
-        })
-    await getSavedAPIDrinks();
+    info.length = 0;
+   await onAuthStateChanged(fire.auth, ()=>{
+      fire.db.collection("Users")
+          .doc(fire.auth.currentUser.uid)
+          .get()
+          .then((compData)=>{
+            let object = {
+              Username: compData.data().Username,
+              Bio: compData.data().Bio,
+              Followers: compData.data().Followers,
+              Following: compData.data().Following,
+              GamesMade: compData.data().GamesMade,
+              DrinksMade: compData.data().DrinksMade
+            }
+
+            hasBio.value = object.Bio !== "";
+
+            info.push(object);
+          })
+      getSavedAPIDrinks();
+    })
+
+  }catch(err){
+    console.log(err.message);
+  }
+
+}
+
+function enteredBio(){
+  try{
+    if (userBio.value.trim() !== ""){
+      fire.db.collection("Users")
+          .doc(fire.auth.currentUser.uid)
+          .update({
+            Bio: userBio.value
+          })
+      .then(()=>{
+        changeBio.value = false;
+        getInfoOfUser();
+      })
+    }
+
   }catch(err){
     console.log(err.message);
   }
@@ -65,30 +118,36 @@ getInfoOfUser();
 <div id="wholePage">
   <div class="headerContent">
 
-    <div class="header">
+    <div class="header" v-if="info[0] != null">
       <div><img class="profilePic" src="../assets/images/profilePic.jpg" alt=""></div>
 
       <div class="publicInformation">
 
         <div class="clearfix" id="topInfo">
-          <h2>{{ userName }}</h2>
+          <h2 style="width: 12em; text-align: center">{{info[0].Username}}</h2>
           <button>Follow</button>
           <button @click="signOut">Sign Out</button>
         </div>
 
         <div class="clearfix" id="middleInfo">
-          <p><b>Followers: </b>0</p>
-          <p><b>Following: </b>0</p>
-          <p><b>Drinks Posted: </b>0</p>
-          <p><b>Games Posted: </b>0</p>
+          <p><b>Followers: </b>{{info[0].Followers}}</p>
+          <p><b>Following: </b>{{info[0].Following}}</p>
+          <p><b>Drinks Posted: </b>{{info[0].DrinksMade}}</p>
+          <p><b>Games Posted: </b>{{info[0].GamesMade}}</p>
         </div>
 
-        <div id="bio">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. </p>
+        <div id="bio" class="clearfix" style=" width: 40em; display: grid; grid-template-columns: auto auto">
+          <p v-if="!hasBio" @click="addBio">Make a Bio!</p>
+          <div v-if="hasBio && !changeBio">
+            <p style="width: 30em">{{info[0].Bio}}</p>
+          </div>
+
+          <div v-if="changeBio">
+            <textarea class="enterBio" @keydown.enter="enteredBio" v-model="userBio"></textarea>
+          </div>
+
+         <img @click="addBio" class="editImage" src="../assets/icons/editButton.png" alt="">
+
         </div>
 
       </div>
@@ -187,8 +246,21 @@ getInfoOfUser();
 }
 
 #bio{
-  width: 40em;
+  width: 30em;
 }
+
+.editImage{
+  width: 1.8em !important;
+}
+
+
+.enterBio{
+  resize: none;
+  width: 40em;
+  height: 7em;
+}
+
+
 
 
 .personalDrinkStuff{

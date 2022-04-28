@@ -11,17 +11,16 @@ let auth = getAuth();
 
 //Sees if the user is signed in or not
 function checkIfSignedIn(){
-  onMounted(()=>{
-    onAuthStateChanged(auth, (user)=>{
-      if(user){
-        isLoggedIn.value = true;
-      }else{
-        console.log("No user seen");
-        isLoggedIn.value = false
-      }
-    })
-  })
-
+      onMounted(()=>{
+        onAuthStateChanged(auth, (user)=>{
+          if(user){
+            isLoggedIn.value = true;
+          }else{
+            console.log("No user seen");
+            isLoggedIn.value = false
+          }
+        })
+      })
 }
 reactive(checkIfSignedIn());
 

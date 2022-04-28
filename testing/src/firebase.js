@@ -76,33 +76,6 @@ function commentOnAPIDrink (itemID, userID, comment){
         })
 }
 
-/*
-async function getAllInfo(){
-    const snapshots = await db.collection("Users").get()
-    console.log(snapshots.docs.map(doc => doc.data().Username));
-}
- */
-
-
-async function getUserInfo(){
-    try {
-       const name = await db.collection("Users")
-            .doc(auth.currentUser.uid)
-            .get()
-            .then((result)=>{
-                return result.data();
-            }).then((compData)=>{
-                return compData.Username;
-            })
-
-        console.log(name);
-
-    }catch (err){
-
-    }
-
-
-}
 
 //Favorites functions
 function addApiToFavorites(docId, drink){
@@ -122,44 +95,7 @@ function addApiToFavorites(docId, drink){
 
 let checkBoolean = ref(true);
 
-function checkAPIFavorite(drinkId){
-    if(auth.currentUser !== null){
-        let arr = [];
-        db.collection("Users")
-            .doc(auth.currentUser.uid)
-            .collection("APIFavorites")
-            .get()
-            .then((querySnapshot)=>{
-                querySnapshot.forEach((doc)=>{
-                    arr.push(doc.id);
-                })
 
-                if(arr.includes(drinkId)){
-                    console.log(arr);
-                    checkBoolean.value = true;
-                }else{
-                    console.log(arr);
-                    checkBoolean.value = false;
-                }
-            })
-    }
-
-}
-
-function addUserDrinkFavorites(docId, drink){
-    if(auth.currentUser !== null){
-        db.collection("Users")
-            .doc(auth.currentUser.uid)
-            .collection("UserFavorites")
-            .doc(docId)
-            .set(drink)
-            .catch((err)=>{
-                console.log(err.message);
-            })
-    }else{
-        alert("Sign in to add to favorites!")
-    }
-}
 
 
 
@@ -168,7 +104,6 @@ export default{
     newUser,
     signOut,
     signIn,
-    getUserInfo,
     addApiToFavorites,
     db,
     auth
