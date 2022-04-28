@@ -1,9 +1,7 @@
 <script setup>
 import {useRouter} from "vue-router";
 import fire from "../firebase.js";
-
-
-import {onMounted, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import {onAuthStateChanged} from "firebase/auth";
 const router = useRouter();
 
@@ -26,14 +24,36 @@ let changeBio = ref(false);
 
 let info = reactive([]);
 
+let arrayOfUsers = fire.arrayOfUsers;
+
+let matched = reactive([]);
+
+let typed = ref("");
+
+
+//Finds suggested users when searching for friends
+function autoSuggest(arr){
+  if(typed.value.trim() === ""){
+    matched.length = 0;
+  }else {
+    matched.length = 0;
+    arr.forEach((item)=>{
+      if(item.Username.substr(0, typed.value.length).toLowerCase() === typed.value.toLowerCase()){
+        matched.push(item);
+      }
+    });
+  }
+  if(matched.length !== 0){
+    console.log(matched);
+  }
+
+}
 
 function addBio(){
   changeBio.value = true;
 
   hasBio.value = true;
-
 }
-
 
 async function getInfoOfUser(){
   try{
@@ -117,11 +137,12 @@ getInfoOfUser();
 
 <div id="wholePage">
   <div class="headerContent">
+<!--    <input @input="autoSuggest(arrayOfUsers)" v-model="typed">-->
 
     <div class="header" v-if="info[0] != null">
       <div><img class="profilePic" src="../assets/images/profilePic.jpg" alt=""></div>
 
-      <div class="publicInformation">
+      <div  class="publicInformation">
 
         <div class="clearfix" id="topInfo">
           <h2 style="width: 12em; text-align: center">{{info[0].Username}}</h2>
@@ -165,8 +186,19 @@ getInfoOfUser();
 
     </div>
 
-    <div id="drinksMade">
+    <div id="friendsPanel">
+      <div class="friendInput">
+        <input @input="autoSuggest(arrayOfUsers)" v-model="typed" type="text">
+      </div>
 
+      <div class="friendListContainer">
+        <div class="listedFriendSearch" v-for="user in matched">
+          <div>
+            <img style="width: 3em" src="../assets/images/originalPic.png">
+            <p>{{user.Username}}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -267,6 +299,7 @@ getInfoOfUser();
   display: grid;
   grid-template-columns: 50% 50%;
   height: 20em;
+  padding: .5em;
 }
 
 #favoriteDrinks{
@@ -274,6 +307,7 @@ getInfoOfUser();
   overflow-x: hidden;
   display: grid;
   grid-template-columns: 33% 33% 33%;
+
 }
 
 #favoriteDrinks::-webkit-scrollbar{
@@ -283,6 +317,36 @@ getInfoOfUser();
 #favoriteDrinks div img{
   width: 10em;
   border-radius: 6px;
+}
+
+.friendInput{
+  text-align: center;
+  margin-bottom: .4em;
+}
+
+.friendInput input{
+  width: 30em;
+}
+
+.friendListContainer{
+  display: grid;
+  grid-template-columns: 45% 45%;
+  gap: 5px;
+}
+
+.listedFriendSearch div{
+  border: 1px black solid;
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.listedFriendSearch:hover{
+  cursor: pointer;
+}
+
+.friendListContainer div p{
+  float: right;
+  margin-right: 2em;
 }
 
 </style>

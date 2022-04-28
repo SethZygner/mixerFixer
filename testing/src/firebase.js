@@ -21,6 +21,7 @@ firebase.initializeApp(config);
 let db = firebase.firestore();
 let auth = reactive(getAuth());
 
+let arrayOfUsers = reactive([]);
 
 
 
@@ -57,6 +58,25 @@ function addUser(data){
 
 }
 
+async function getAllUsers(arr){
+    arr.length = 0;
+    await db.collection("Users")
+        .get()
+        .then((doc)=>{
+            doc.forEach((user)=>{
+                let singleUser = {
+                    Username: user.data().Username,
+                    ID: user.data().ID
+                }
+                arr.push(singleUser);
+            })
+        })
+        .then(()=>{
+            return arr;
+        })
+}
+
+await getAllUsers(arrayOfUsers);
 
 
 //Chat functions
@@ -93,11 +113,6 @@ function addApiToFavorites(docId, drink){
     }
 }
 
-let checkBoolean = ref(true);
-
-
-
-
 
 export default{
     addUser,
@@ -105,6 +120,8 @@ export default{
     signOut,
     signIn,
     addApiToFavorites,
+    getAllUsers,
+    arrayOfUsers,
     db,
     auth
 }

@@ -12,6 +12,8 @@ let serverAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
 
 
 
+
+
 if(fire.auth.currentUser === null){
   signedIn = false;
   console.log("No signed in")

@@ -48,7 +48,9 @@ function signUp(){
               Followers: 0,
               Following: 0,
               DrinksMade: 0,
-              GamesMade: 0
+              GamesMade: 0,
+              ID: auth.currentUser.uid,
+              Coins: 3
         });
 
         //This then clears all inputs just for looks pretty much
