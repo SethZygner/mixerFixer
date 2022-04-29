@@ -1,11 +1,13 @@
 <script setup>
 import {reactive, ref} from "vue";
 import fire from "../firebase.js";
-import { RouterLink } from "vue-router";
+import {RouterLink, useRouter} from "vue-router";
 import {onAuthStateChanged} from "firebase/auth";
 
 let array = reactive([]);
 let signedIn;
+
+let router = useRouter();
 
 
 let serverAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
@@ -21,6 +23,8 @@ if(fire.auth.currentUser === null){
   signedIn = true;
   console.log("Signed In")
 }
+
+
 
 
 </script>

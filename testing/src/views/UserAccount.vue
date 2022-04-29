@@ -140,14 +140,13 @@ getInfoOfUser();
 <!--    <input @input="autoSuggest(arrayOfUsers)" v-model="typed">-->
 
     <div class="header" v-if="info[0] != null">
-      <div><img class="profilePic" src="../assets/images/profilePic.jpg" alt=""></div>
+      <div><img class="profilePic" src="../assets/images/originalPic.png" alt=""></div>
 
       <div  class="publicInformation">
 
         <div class="clearfix" id="topInfo">
-          <h2 style="width: 12em; text-align: center">{{info[0].Username}}</h2>
-          <button>Follow</button>
-          <button @click="signOut">Sign Out</button>
+          <h2 style="width: 12em; text-align: left">{{info[0].Username}}</h2>
+          <img style="float: right; width: 3em; margin-right: 2em;" src="../assets/icons/settingsIcon.png" @click="signOut">
         </div>
 
         <div class="clearfix" id="middleInfo">
@@ -249,22 +248,7 @@ getInfoOfUser();
   float: left;
 }
 
-#topInfo button{
-  float: left;
-  margin-left: 2em;
-  margin-top: 1em;
-  width: 8em;
-  height: 3em;
-  background-color: dodgerblue;
-  color: white;
-  border: none;
-  border-radius: 10px;
-}
 
-#topInfo button:hover{
-  cursor: pointer;
-  background-color: cornflowerblue;
-}
 
 #middleInfo{
   width: 100%;

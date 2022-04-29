@@ -38,6 +38,7 @@ let listedDrinks = reactive([]); //Drinks displayed from what the user has input
 let multipleIngredientUrl; //Initialize the URL for function "enterIngredient(ing)"
 
 
+
 //This function takes the ingredient given by the user
 function enterIngredient(ing){
 

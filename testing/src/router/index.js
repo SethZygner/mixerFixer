@@ -28,6 +28,11 @@ const router = createRouter({
       path: "/socialHub",
       name: "socialHub",
       component: () => import("../views/SocialHub.vue")
+    },
+    {
+      path: "/testScreen",
+      name: "testScreen",
+      component: ()=> import("../views/testScreen.vue")
     }
   ],
 });
