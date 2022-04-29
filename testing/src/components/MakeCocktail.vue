@@ -23,7 +23,7 @@ fire.db.collection("Users")
 
 function postDrink(arr){
   try{
-    if(arr.length !== 0 && description.value.trim() !== "" && drinkName.value.trim() !== ""){
+    if(arr.length !== 0 && description.value.trim() !== "" && drinkName.value.trim() !== "" && parseFloat(amount.value) > 0){
       let drinkObj = {};
       let Measurement = "Measurement"
       let Measurements = reactive({});
@@ -41,20 +41,40 @@ function postDrink(arr){
 
       fire.db.collection("Users")
       .doc(fire.auth.currentUser.uid)
-      .collection("MadeDrinks")
-      .add({
-        DrinkInfo: drinkObj
+      .get()
+      .then((result)=>{
+        let coins = result.data().Coins;
+
+        if(coins > 0){
+          coins -= 1;
+          fire.db.collection("Users")
+          .doc(fire.auth.currentUser.uid)
+          .update({
+            Coins: coins
+          }).then(()=>{
+            fire.db.collection("Users")
+                .doc(fire.auth.currentUser.uid)
+                .collection("MadeDrinks")
+                .add({
+                  DrinkInfo: drinkObj
+                })
+                .then((doc)=>{
+                  fire.db.collection("PublicDrinks")
+                      .doc(doc.id)
+                      .set({
+                        DrinkInfo: drinkObj
+                      })
+                })
+          })
+
+
+
+        }else{
+          alert("You are out of coins!");
+        }
       })
-      .then((doc)=>{
-        fire.db.collection("PublicDrinks")
-        .doc(doc.id)
-        .set({
-          DrinkInfo: drinkObj
-        })
-        .then((doc)=>{
-          //Finish stuff here
-        })
-      })
+
+
     }else{
       alert("Missing some fields!")
     }
