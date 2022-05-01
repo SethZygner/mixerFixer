@@ -12,18 +12,24 @@ let userName = ref("");
 let drinkName = ref("");
 let description = ref("");
 
-fire.db.collection("Users")
-.doc(fire.auth.currentUser.uid)
-.get()
-.then((result)=>{
-  userName.value = result.data().Username;
-})
+let coinAmount = ref(0);
+
+
+if(fire.auth.currentUser !== null){
+  fire.db.collection("Users")
+      .doc(fire.auth.currentUser.uid)
+      .get()
+      .then((result)=>{
+        userName.value = result.data().Username;
+      })
+}
+
 
 
 
 function postDrink(arr){
   try{
-    if(arr.length !== 0 && description.value.trim() !== "" && drinkName.value.trim() !== "" && parseFloat(amount.value) > 0){
+    if(arr.length !== 0 && description.value.trim() !== "" && drinkName.value.trim() !== "" && 9999 > parseFloat(amount.value) > -1 ){
       let drinkObj = {};
       let Measurement = "Measurement"
       let Measurements = reactive({});
@@ -31,8 +37,8 @@ function postDrink(arr){
         Measurements[Measurement+i.toString()] = arr[i]
       }
 
-      drinkObj["Drink Info"] = Measurements;
-      drinkObj["General Info"] = {
+      drinkObj["DrinkInfo"] = Measurements;
+      drinkObj["GeneralInfo"] = {
         DrinkName: drinkName.value,
         Description: description.value,
         CreatorName: userName.value,
@@ -44,13 +50,17 @@ function postDrink(arr){
       .get()
       .then((result)=>{
         let coins = result.data().Coins;
+        let amountPosted = result.data().DrinksMade;
+
 
         if(coins > 0){
           coins -= 1;
+          amountPosted += 1;
           fire.db.collection("Users")
           .doc(fire.auth.currentUser.uid)
           .update({
-            Coins: coins
+            Coins: coins,
+            DrinksMade: amountPosted
           }).then(()=>{
             fire.db.collection("Users")
                 .doc(fire.auth.currentUser.uid)
@@ -76,7 +86,7 @@ function postDrink(arr){
 
 
     }else{
-      alert("Missing some fields!")
+      alert("Missing some fields or a the 'Amount' is invalid");
     }
   }catch (err){
     console.log(err.message);
@@ -116,41 +126,54 @@ function deleteIngredient(index){
   <div class="ingredientInput">
     <div style="text-align: center; justify-content: center">
       <input placeholder="Drink Name..." v-model="drinkName">
+
+      <div class="ingredientInstructionInput">
+        <h2>Enter Instructions</h2>
+        <textarea maxlength="1000" v-model="description" style="resize: none;
+         font-family: Bahnschrift,serif; padding: 5px; border: none;
+          width: 35em; height: 15em; border-radius: 5px;"></textarea>
+        <br>
+        <button @click="postDrink(ingredientsArray)">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+
+    <div class="ingredientStuff">
+      <input maxlength="30" v-model="ingredient" placeholder="Ingredient..." type="text">
+      <input v-model="amount" placeholder="Amount..." type="number">
+      <select v-model="measure" style="height: 3em; border-radius: 3px">
+        <option>oz</option>
+        <option v-if="amount > 1">cups</option>
+        <option v-else>cup</option>
+        <option>tbsp.</option>
+        <option>tsp.</option>
+        <option>mL</option>
+        <option v-if="amount > 1">liters</option>
+        <option v-else>liter</option>
+        <option v-if="amount > 1">parts</option>
+        <option v-else>part</option>
+        <option></option>
+      </select>
+
+      <br>
       <button @click="addToList">Add Ingredient</button>
-      <div class="ingredientStuff">
-        <input maxlength="30" v-model="ingredient" id="ingredient" placeholder="Ingredient..." type="text">
-        <input v-model="amount" id="measureNumber" placeholder="Amount..." type="number">
-        <select v-model="measure" style="height: 3em; border-radius: 3px">
-          <option>oz</option>
-          <option>cup</option>
-          <option>Tbsp.</option>
-          <option>tsp.</option>
-          <option>mL</option>
-          <option>Liters</option>
-          <option></option>
-        </select>
-      </div>
-      <div class="ingredientBox">
-        <div class="clearfix ingredient" style="width: 80%; margin: 1em auto; height: auto; text-align: center;" v-for="item in ingredientsArray">
-          <p >{{item.Ingredient}}</p>
-          <p >{{item.Measurement}}</p>
-          <div>
-            <button @click="deleteIngredient(ingredientsArray.indexOf(item))" style="height: 2em; width: 2em; ">X</button>
-          </div>
+    </div>
+
+    <div class="ingredientBox">
+      <div class="clearfix ingredient" style="width: 80%; margin: 1em auto; height: auto; text-align: center;" v-for="item in ingredientsArray">
+        <p >{{item.Ingredient}}</p>
+        <p >{{item.Measurement}}</p>
+        <div>
+          <button @click="deleteIngredient(ingredientsArray.indexOf(item))" style="height: 2em; width: 2em; ">X</button>
         </div>
-      </div>
-      <div style="height: 4em; border: 1px black solid">
-        <button>Continue to Instructions</button>
       </div>
     </div>
   </div>
 
 
-  <div class="ingredientInstructionInput">
-    <h2>Enter Instructions</h2>
-    <textarea v-model="description" style="resize: none; width: 20em; height: 6em;"></textarea>
-    <button @click="postDrink(ingredientsArray)">Send</button>
-  </div>
+
 </div>
 
 
@@ -176,12 +199,11 @@ input{
   height: 3em;
   border-radius: 3px;
   border: none;
-  width: 20em;
+  width: 16em;
   text-align: center;
 }
 
 .ingredientStuff{
-
   margin: .5em;
 }
 
@@ -193,7 +215,8 @@ input{
 
 .ingredientBox{
   border: 1px black solid;
-  height: 26em;
+  height: 23em;
+  border-radius: 5px;
 }
 
 .ingredient p{
@@ -202,6 +225,13 @@ input{
 
 .ingredient div{
   text-align: right;
+}
+
+button{
+  height: 3em;
+  width: 9em;
+  border-radius: 5px;
+  border: none;
 }
 
 </style>

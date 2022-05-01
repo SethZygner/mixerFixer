@@ -1,110 +1,179 @@
 <script setup>
 import {useRouter} from "vue-router";
-import {onAuthStateChanged} from "firebase/auth";
+import {onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
 import fire from "../firebase.js";
-import {ref} from "vue";
-import SignIn from "../components/SignIn.vue";
+import { ref} from "vue";
 
 /*
 SE: Self Explanatory
  */
 
-const email = ref("");//SE
+const newEmail = ref("");//SE
 
-const userName = ref("");//SE
+const email = ref("");
 
-const password = ref("");//SE
+const password = ref("");
+
+let showSignUp = ref(false);
+
+const newUserName = ref("");
+
+const newPassword = ref("");//SE
 
 const rePass = ref("");//SE
 
 const router = useRouter();//Calls the router import to use for directing to another page
 
-let signInView = ref(true);//Shows the sign-in view it is set to true
 
+let userNameExist = ref(false);
 
 //This function signs ip a new user and directs the user after signing them up to the home page
 function signUp(){
 
-  if(userName.value.trim() !== ""){//Checks if the entered username is empty or not
+  userNameExist.value = false;
 
-    if(password.value !== rePass.value){//Checks if the password matches the "re-enter password" field
+  fire.db.collection("Users")
+  .get()
+  .then((result)=>{
+    result.forEach((item)=>{
+      if(item.data().Username === newUserName.value){
+        userNameExist.value = true;
+      }
+    })
+  })
 
-      alert("Password didn't match! Try again.")//SE
+
+
+
+  if(newUserName.value.trim() !== ""){//Checks if the entered username is empty or not
+
+    if(newPassword.value === rePass.value){//Checks if the password matches the "re-enter password" field
+
+      if(!userNameExist){
+        fire.newUser(newEmail.value, newPassword.value);//Sends the entered email and password to the function found in the 'firebase' import
+
+        let auth = fire.auth;//SE
+
+        onAuthStateChanged(auth, ()=>{//When the authorization event has a change, then it will add a user to firebase
+
+
+          fire.addUser(
+              {
+
+                Username:newUserName.value,
+                Bio: "",
+                Followers: 0,
+                Following: 0,
+                DrinksMade: 0,
+                GamesMade: 0,
+                ID: auth.currentUser.uid,
+                Coins: 3
+              });
+
+          //This then clears all inputs just for looks pretty much
+          newUserName.value = "";
+          newEmail.value ="";
+          newPassword.value="";
+          rePass.value = "";
+
+          router.push('/');//This pushes the user to the home page after signing them in
+        })
+      }
+      else {
+        alert("Username already taken");
+      }
 
     } else{
-
-      fire.newUser(email.value, password.value);//Sends the entered email and password to the function found in the 'firebase' import
-
-      let auth = fire.auth;//SE
-
-      onAuthStateChanged(auth, ()=>{//When the authorization event has a change, then it will add a user to firebase
-
-
-        fire.addUser(
-            {
-
-              Username:userName.value,
-              Bio: "",
-              Followers: 0,
-              Following: 0,
-              DrinksMade: 0,
-              GamesMade: 0,
-              ID: auth.currentUser.uid,
-              Coins: 3
-        });
-
-        //This then clears all inputs just for looks pretty much
-        email.value ="";
-        password.value="";
-        rePass.value = "";
-
-        router.push('/');//This pushes the user to the home page after signing them in
-      })
+      alert("Password didn't match! Try again.")//SE
     }
   }else{
     alert("No username entered!");//SE
   }
 }
 
+function signIn(){
+    signInWithEmailAndPassword(fire.auth, email.value, password.value)
+    .then(()=>{
+      router.push('/');
+    })
+    .catch((err)=>{
+      alert(err.message);
+    })
+
+
+}
 
 </script>
 
 <template>
 
-    <SignIn :class="signInView && 'hide'" />
-    <!-- All the inputs -->
-    <div class="main_content" :class="!signInView && 'hide'">
+  <div class="allContent">
 
-      <input maxlength="16" type="text" v-model="userName" placeholder="Username">
+    <div class="signUpClass" v-if="showSignUp">
+      <h1>Sign Up</h1>
       <br>
-      <input maxlength="35" type="email" v-model="email" placeholder="Enter email">
+      <input maxlength="16" type="text" v-model="newUserName" placeholder="Username">
       <br>
-      <input type="password" v-model="password" placeholder="Enter Password">
+      <input maxlength="35" type="email" v-model="newEmail" placeholder="Enter email">
+      <br>
+      <input type="password" v-model="newPassword" placeholder="Enter Password">
       <br>
       <input type="password" v-model="rePass" placeholder="Re-enter password">
       <br>
       <button @click="signUp">Sign Up</button>
       <br>
-      <button @click="signInView = !signInView" style="background-color: white; color: black;">Sign In</button>
+      <p @click="showSignUp =! showSignUp">Already have an account? <span class="link">SignIn</span></p>
     </div>
+
+    <div class="signInClass" v-else>
+      <h1>Sign In</h1>
+      <br>
+      <input maxlength="35" type="email" v-model="email" placeholder="Enter email">
+      <br>
+      <input type="password" v-model="password" placeholder="Enter Password">
+      <br>
+      <button @click="signIn">Sign In</button>
+      <br>
+      <p @click="showSignUp = !showSignUp">Don't have an account? Register<span class="link"> here</span></p>
+    </div>
+
+  </div>
+
 
 </template>
 
 
 <style scoped>
 
-.main_content{
+
+
+
+.allContent{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.signUpClass, .signInClass{
   text-align: center;
   margin-top: 3em;
+  height: 31em;
 }
 
 
-.main_content input::placeholder{
+input::placeholder{
   color: black;
 }
 
+.link{
+  color: purple;
+}
 
-.main_content input{
+.link:hover{
+  cursor: pointer;
+}
+
+
+input{
   height: 2em;
   width: 20em;
   font-size: 1.5em;
@@ -116,7 +185,7 @@ function signUp(){
   border: none;
 }
 
-.main_content input:focus{
+.signUpClass input:focus{
   border: none;
 }
 
@@ -138,6 +207,7 @@ button:hover{
 .hide{
   display: none;
 }
+
 
 
 </style>

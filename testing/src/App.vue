@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { getAuth, onAuthStateChanged} from "firebase/auth";
-import {onMounted, reactive, ref} from "vue";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+import {onMounted, ref} from "vue";
 import fire from "./firebase.js";
 
 
@@ -9,21 +9,18 @@ import fire from "./firebase.js";
 let isLoggedIn = ref(false);
 let auth = getAuth();
 
-//Sees if the user is signed in or not
-function checkIfSignedIn(){
-      onMounted(()=>{
-        onAuthStateChanged(auth, (user)=>{
-          if(user){
-            isLoggedIn.value = true;
-          }else{
-            console.log("No user seen");
-            isLoggedIn.value = false
-          }
-        })
-      })
-}
-reactive(checkIfSignedIn());
 
+async function checkSignedIn(){
+  await onMounted(()=>{
+    onAuthStateChanged(fire.auth, ()=>{
+      if(fire.auth.currentUser !== null){
+        isLoggedIn.value = true;
+      }
+    })
+  })
+}
+
+checkSignedIn();
 
 </script>
 
@@ -76,6 +73,7 @@ reactive(checkIfSignedIn());
   width: 120px;
   height: auto;
   position: absolute;
+  z-index: 100;
   left: 20px;
   top: 20px;
 }

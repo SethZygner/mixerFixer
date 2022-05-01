@@ -18,6 +18,7 @@ const config = {
 firebase.initializeApp(config);
 
 
+
 let db = firebase.firestore();
 let auth = reactive(getAuth());
 
@@ -34,16 +35,6 @@ function newUser(email, password){
 }
 function signOut(){
     auth.signOut().then(r => console.log(r));
-}
-function signIn(email, password){
-    signInWithEmailAndPassword(auth, email, password)
-        .then((result)=>{
-            console.log(result);
-            console.log(auth.currentUser.uid);
-        })
-        .catch((err)=>{
-            alert(err.message);
-        })
 }
 
 
@@ -118,7 +109,6 @@ export default{
     addUser,
     newUser,
     signOut,
-    signIn,
     addApiToFavorites,
     getAllUsers,
     arrayOfUsers,

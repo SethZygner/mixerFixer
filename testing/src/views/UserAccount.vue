@@ -43,9 +43,6 @@ function autoSuggest(arr){
       }
     });
   }
-  if(matched.length !== 0){
-    console.log(matched);
-  }
 
 }
 
@@ -69,7 +66,8 @@ async function getInfoOfUser(){
               Followers: compData.data().Followers,
               Following: compData.data().Following,
               GamesMade: compData.data().GamesMade,
-              DrinksMade: compData.data().DrinksMade
+              DrinksMade: compData.data().DrinksMade,
+              Coins: compData.data().Coins
             }
 
             hasBio.value = object.Bio !== "";
@@ -120,9 +118,6 @@ async function getSavedAPIDrinks(){
       APIFavorites.push(info);
     })
   })
-  .then(()=>{
-    console.log(APIFavorites);
-  })
 }
 
 
@@ -154,6 +149,7 @@ getInfoOfUser();
           <p><b>Following: </b>{{info[0].Following}}</p>
           <p><b>Drinks Posted: </b>{{info[0].DrinksMade}}</p>
           <p><b>Games Posted: </b>{{info[0].GamesMade}}</p>
+          <p><b>Coins: </b>{{info[0].Coins}}</p>
         </div>
 
         <div id="bio" class="clearfix" style=" width: 40em; display: grid; grid-template-columns: auto auto">
@@ -185,9 +181,11 @@ getInfoOfUser();
 
     </div>
 
-    <div id="friendsPanel">
+    <div id="friendsPanel" style="text-align: center">
+      <h1>Find Friends</h1>
       <div class="friendInput">
-        <input @input="autoSuggest(arrayOfUsers)" v-model="typed" type="text">
+        <input style="height: 2.5em; text-align: center; font-size: 15px"
+               @input="autoSuggest(arrayOfUsers)" v-model="typed" type="text">
       </div>
 
       <div class="friendListContainer">
@@ -209,7 +207,7 @@ getInfoOfUser();
 <style scoped>
 
 #wholePage{
-  border: 2px solid black;
+
   height: 40em;
   overflow: scroll;
   overflow-x: hidden;
@@ -222,8 +220,9 @@ getInfoOfUser();
 
 .headerContent, .personalDrinkStuff{
   margin: 4em 2em;
-  background-color: lightgray;
+  background-color: rgba(0, 0, 0, .6);
   border-radius: 15px;
+  color: white;
 }
 
 .header{
@@ -274,6 +273,7 @@ getInfoOfUser();
   resize: none;
   width: 40em;
   height: 7em;
+  font-family: Bahnschrift, serif;
 }
 
 
@@ -282,7 +282,7 @@ getInfoOfUser();
 .personalDrinkStuff{
   display: grid;
   grid-template-columns: 50% 50%;
-  height: 20em;
+  height: 40em;
   padding: .5em;
 }
 

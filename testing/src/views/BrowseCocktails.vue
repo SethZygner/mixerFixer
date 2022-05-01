@@ -12,10 +12,6 @@ document.title = "Browse Cocktails";
 SE: means "Self Explanatory"
  */
 
-if (fire.auth === null){
-  console.log("User is null");
-}
-
 
 
 //Variables
@@ -37,34 +33,115 @@ let listedDrinks = reactive([]); //Drinks displayed from what the user has input
 
 let multipleIngredientUrl; //Initialize the URL for function "enterIngredient(ing)"
 
+let arrayOfIngredientsFromAPI = reactive([]);
+
+let matched = reactive([]);
+
+
+// function autoSuggest(arr){
+//   if(typed.value.trim() === ""){
+//     matched.length = 0;
+//   }else {
+//     matched.length = 0;
+//     arr.forEach((item)=>{
+//       if(item.Username.substr(0, typed.value.length).toLowerCase() === typed.value.toLowerCase()){
+//         matched.push(item);
+//       }
+//     });
+//   }
+//
+// }
+
+
+function getIngredients(){
+  fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list")
+      .then((response)=>{
+        return response.json();
+      })
+      .then((result)=>{
+        result.drinks.forEach((ing)=>{
+          arrayOfIngredientsFromAPI.push(ing.strIngredient1);
+        })
+      })
+}
+getIngredients();
+
+function autoSuggestIngredients(arr){
+  if(ingredientInput.value.trim() === ""){
+    matched.length = 0;
+  }else{
+    matched.length = 0;
+    arr.forEach((ing)=>{
+      if (ing.substr(0, ingredientInput.value.length).toLowerCase() === ingredientInput.value.toLowerCase()){
+        matched.push(ing);
+      }
+    })
+  }
+}
+
+
+
+
+
+
+//Removes an ingredient from the list made
+function removeIngredient(index){
+
+  ingArray.splice(index, 1);
+
+  if(ingArray.length === 0){
+    clearIngredients();
+  }else{
+    multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i=";
+
+    for (let i = 0; i < ingArray.length; i++){
+      if(ingArray.length === i+1){
+        multipleIngredientUrl += ingArray[i];
+      }else{
+        multipleIngredientUrl += (ingArray[i]+","); //Adds the comma to the URL along with the added ingredient
+      }
+    }
+
+    sendEnteredIngredientsURL(multipleIngredientUrl);
+  }
+}
 
 
 //This function takes the ingredient given by the user
-function enterIngredient(ing){
+function enterIngredient(){
 
 
   if(ingredientInput.value.trim() !== ""){ //This "if" statement checks if the input the user made is valid (not empty)
 
     //Because the URL needs to have commas, this will check if the "ingArray" is empty and if it is,
     //this means that there will be no commas necessary for the first ingredient entered
+    multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i="; //Adds URL
     if(ingArray.length === 0){
 
-      multipleIngredientUrl = "https://www.thecocktaildb.com/api/json/v2/"+apiKey+"/filter.php?i="; //Adds URL
+      multipleIngredientUrl += ingredientInput.value.trim(); //Eliminate spaces of the ingredient entered and adds it to the URL
 
-      multipleIngredientUrl += ing.trim(); //Eliminate spaces of the ingredient entered and adds it to the URL
+      ingArray.push(ingredientInput.value.trim());
 
       sendEnteredIngredientsURL(multipleIngredientUrl); //SE
 
-      ingArray.push(ing.trim()); //Pushes to the array for display in the "filter" div (seen below in template)
+       //Pushes to the array for display in the "filter" div (seen below in template)
 
       ingredientInput.value = "" //Sets the input back to empty for smooth transition to enter a new ingredient to add
 
     }else{ //This else is for if there are already items in the "ingArray" so when it's added to the URL,
       //there will be a comma added with it (as the URL requires)
 
-      multipleIngredientUrl += ","+ing.trim(); //Adds the comma to the URL along with the added ingredient
+      ingArray.push(ingredientInput.value.trim()); //Pushes to the array for display in the "filter" div (seen below in template)
+      for (let i = 0; i < ingArray.length; i++){
+        if(ingArray.length === i+1){
+          multipleIngredientUrl += ingArray[i];
+        }else{
+          multipleIngredientUrl += (ingArray[i]+","); //Adds the comma to the URL along with the added ingredient
+        }
+      }
 
-      ingArray.push(ing.trim()); //Pushes to the array for display in the "filter" div (seen below in template)
+      console.log(multipleIngredientUrl);
+
 
       ingredientInput.value = ""; //Sets the input back to empty for smooth transition to enter a new ingredient to add
 
@@ -257,12 +334,20 @@ loadingGif();
       <div  class="inputDiv">
 
         <!-- The input with all the styling within the element itself -->
-        <input placeholder="Add an Ingredient..."
-               @keydown.enter="enterIngredient(ingredientInput)"
+        <input class="ingInput" placeholder="Add an Ingredient..."
+               @keydown.enter="enterIngredient"
+               @input="autoSuggestIngredients(arrayOfIngredientsFromAPI)"
                v-model="ingredientInput"
-               type="text" style="float: right; margin-right: 5em; width: 25em; height: 2.7em; border-radius: 10px;
-                border: none; text-align: center; font-size: 1.2em">
+               type="text" >
+
+        <div class="dropdown">
+          <div v-if="matched.length !== 0" v-for="item in matched" >
+            <h3>{{item}}</h3>
+          </div>
+        </div>
       </div>
+
+
 
 
 
@@ -275,7 +360,14 @@ loadingGif();
         <div class="filterDisplay">
 
           <!-- For every ingredient in the "ingArray", make another div for each item in said array -->
-          <div v-for="item in ingArray">{{item}}</div>
+          <div class="itemsEntered" v-for="item in ingArray">
+            <div>
+              <h3>{{item}}</h3>
+            </div>
+            <div>
+              <button @click="removeIngredient(ingArray.indexOf(item))">X</button>
+            </div>
+          </div>
 
           <br> <!-- A break -->
 
@@ -481,7 +573,24 @@ loadingGif();
 
 
 
+.itemsEntered{
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
 
+.itemsEntered div button{
+  margin-top: 1.2em;
+  width: 2em;
+  height: 2em;
+  border: none;
+  border-radius: 50%;
+}
+
+.itemsEntered div button:hover{
+  background-color: rgb(255, 49, 49);
+  color: white;
+  cursor: pointer;
+}
 
 
 
@@ -544,8 +653,6 @@ loadingGif();
 
 
 
-
-
 /* Specific ingredient part of page styling */
 .leftPage{
   margin-top: 2em;
@@ -554,6 +661,21 @@ loadingGif();
 .inputDiv{
   width: 100%;
   height: 4em;
+}
+
+.ingInput{
+  float: right;
+  margin-right: 5em;
+  width: 25em;
+  height: 2.7em;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  font-size: 1.2em
+}
+
+.dropdown{
+  margin: 0 auto;
 }
 
 .findCocktailArea{
@@ -615,15 +737,17 @@ loadingGif();
 /* Random Cocktail view styling */
 .RandomView{
   margin-top: 2em;
+  border: 1px black solid;
+  text-align: center;
+  margin-right: .5em;
+  justify-content: center;
 }
 
 .randomButton{
   height: 4em;
   width: 10em;
-  margin-left: 3em;
-  margin-top: -2em;
   border-radius: 10px;
-  border: 2px black solid;
+  border: none;
   background-color: rgba(180, 71, 204, .7);
   color: white;
 }
