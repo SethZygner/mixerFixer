@@ -20,7 +20,8 @@ async function getStuff(){
           Followers: result.data().Followers,
           Following: result.data().Following,
           DrinksMade: result.data().DrinksMade,
-          GamesMade: result.data().GamesMade
+          GamesMade: result.data().GamesMade,
+          Bio: result.data().Bio
         })
        checkIfFollowing();
       })
@@ -77,6 +78,9 @@ getStuff();
               <p><b>Drinks Made: </b>{{item.DrinksMade}}</p>
               <p><b>Games Made: </b>{{item.GamesMade}}</p>
             </div>
+            <div class="bio">
+              <p>{{item.Bio}}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -117,12 +121,23 @@ button{
 
 .stats{
   display: grid;
-  grid-template-columns: auto auto auto;
-  margin-top: 4em;
+  grid-template-columns: auto auto;
+  margin-top: 2em;
 }
 
 .allInfo{
   margin-top: 3em;
+  text-align: center;
 }
+
+.bio{
+  height: 8em;
+  width: 38em;
+  border-radius: 10px;
+  margin: 0 auto;
+  background-color: rgba(225, 255, 255, .06);
+  border: 1px black solid;
+}
+
 
 </style>
