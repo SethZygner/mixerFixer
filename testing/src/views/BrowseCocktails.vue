@@ -340,11 +340,6 @@ loadingGif();
                v-model="ingredientInput"
                type="text" >
 
-        <div class="dropdown">
-          <div v-if="matched.length !== 0" v-for="item in matched" >
-            <h3>{{item}}</h3>
-          </div>
-        </div>
       </div>
 
 
@@ -441,8 +436,11 @@ loadingGif();
       <!-- This is a simple 'X' so the user can exit out of the drink display -->
         <div class="clearfix exit" style="width: 100%; text-align: center;">
           <h2 @click="exitOut" style="margin-right: 2em; float: left;  width: 3em;">X</h2>
-          <img style="width: 4em; position: relative; right: 3.7em;  border: none;" src="../assets/icons/unSaved.png" v-if="!isLiked" @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">
-          <img src="../assets/icons/saved.png" style="width: 4em; position: relative; right: 3.7em;  border: none" v-else @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">
+          <img v-if="!isLiked" style="width: 4em; position: relative; right: 3.7em;  border: none;" src="../assets/icons/unSaved.png"
+               @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">
+
+          <img v-else src="../assets/icons/saved.png" style="width: 4em; position: relative; right: 3.7em; border: none"
+               @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">
         </div>
 
 
@@ -674,9 +672,6 @@ loadingGif();
   font-size: 1.2em
 }
 
-.dropdown{
-  margin: 0 auto;
-}
 
 .findCocktailArea{
   display: grid;

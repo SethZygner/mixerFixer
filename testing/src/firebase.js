@@ -21,6 +21,7 @@ firebase.initializeApp(config);
 
 let db = firebase.firestore();
 let auth = reactive(getAuth());
+let userId = ref("");
 
 let arrayOfUsers = reactive([]);
 
@@ -37,6 +38,11 @@ function signOut(){
     auth.signOut().then(r => console.log(r));
 }
 
+
+function setProfileId(userID){
+    userId.value = userID;
+
+}
 
 
 function addUser(data){
@@ -111,6 +117,8 @@ export default{
     signOut,
     addApiToFavorites,
     getAllUsers,
+    setProfileId,
+    userId,
     arrayOfUsers,
     db,
     auth

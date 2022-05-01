@@ -31,6 +31,7 @@ let matched = reactive([]);
 let typed = ref("");
 
 
+
 //Finds suggested users when searching for friends
 function autoSuggest(arr){
   if(typed.value.trim() === ""){
@@ -39,7 +40,10 @@ function autoSuggest(arr){
     matched.length = 0;
     arr.forEach((item)=>{
       if(item.Username.substr(0, typed.value.length).toLowerCase() === typed.value.toLowerCase()){
-        matched.push(item);
+        if(item.Username !== info[0].Username){
+          matched.push(item);
+        }
+
       }
     });
   }
@@ -121,6 +125,11 @@ async function getSavedAPIDrinks(){
 }
 
 
+function clickOnUser(userID){
+  fire.setProfileId(userID);
+  router.push("/fellowUser");
+}
+
 getInfoOfUser();
 
 
@@ -190,7 +199,7 @@ getInfoOfUser();
 
       <div class="friendListContainer">
         <div class="listedFriendSearch" v-for="user in matched">
-          <div>
+          <div @click="clickOnUser(user.ID)">
             <img style="width: 3em" src="../assets/images/originalPic.png">
             <p>{{user.Username}}</p>
           </div>
