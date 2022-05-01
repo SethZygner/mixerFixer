@@ -154,8 +154,8 @@ getInfoOfUser();
         </div>
 
         <div class="clearfix" id="middleInfo">
-          <p><b>Followers: </b>{{info[0].Followers}}</p>
-          <p><b>Following: </b>{{info[0].Following}}</p>
+<!--          <p><b>Followers: </b>{{info[0].Followers}}</p>-->
+<!--          <p><b>Following: </b>{{info[0].Following}}</p>-->
           <p><b>Drinks Posted: </b>{{info[0].DrinksMade}}</p>
           <p><b>Games Posted: </b>{{info[0].GamesMade}}</p>
           <p><b>Coins: </b>{{info[0].Coins}}</p>

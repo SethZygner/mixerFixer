@@ -35,104 +35,104 @@ function getDrinkInfo(index){
 
   }
   generalInfo.push(userDrinks[index].GeneralInfo);
-  checkIfFollowing(userDrinks[index].GeneralInfo.CreatorID);
+  //checkIfFollowing(userDrinks[index].GeneralInfo.CreatorID);
   showDrinkInfo.value = true;
 }
 
-function checkIfFollowing(userID){
-  isFollowing.value = false;
-  fire.db.collection("Users")
-  .doc(fire.auth.currentUser.uid)
-  .collection("Following")
-  .doc(userID)
-  .get()
-  .then((result)=>{
-    if (result.exists){
-      isFollowing.value = true;
-    }
-
-  })
-}
-
-function followOrUnfollow(userID, action){
-  let getFollowings = fire.db.collection("Users").doc(fire.auth.currentUser.uid).collection("Following");
-  let getUserFollowers = fire.db.collection("Users").doc(userID).collection("Followers");
-  let getUser = fire.db.collection("Users")
-      .doc(fire.auth.currentUser.uid);
-  let numberOfFollowings;
-  let numberOfUserFollowers;
-
-  getUser.get()
-      .then((result)=>{
-        numberOfFollowings = parseInt(result.data().Following)
-      })
-
-  fire.db.collection("Users")
-  .doc(userID)
-  .get()
-  .then((result)=>{
-    numberOfUserFollowers = parseInt(result.data().Followers);
-  })
-
-
-
-  switch (action){
-    case "Unfollow":
-      getFollowings.doc(userID).delete()
-      .then(()=>{
-        numberOfFollowings -= 1;
-        numberOfUserFollowers -= 1;
-        getUser.update({
-          Following: parseInt(numberOfFollowings)
-        })
-        getUserFollowers.doc(fire.auth.currentUser.uid).delete();
-        fire.db.collection("Users")
-        .doc(userID)
-        .update({
-          Followers: parseInt(numberOfUserFollowers)
-        })
-      });
-
-
-      isFollowing.value = false;
-      break;
-
-    case "Follow":
-        getFollowings.doc(userID)
-          .set({
-            Username: generalInfo[0].CreatorName
-          })
-          .then(()=>{
-            isFollowing.value = true;
-          })
-        .then(()=>{
-          numberOfFollowings += 1;
-          getUser.update({
-            Following: numberOfFollowings
-          })
-
-          numberOfUserFollowers += 1;
-
-          fire.db.collection("Users")
-          .doc(userID)
-          .update({
-            Followers: parseInt(numberOfUserFollowers)
-          })
-
-          getUser.get()
-          .then((result)=>{
-            getUserFollowers.doc(fire.auth.currentUser.uid)
-                .set({
-                  Username: result.data().Username
-                })
-          })
-
-
-        })
-      break;
-  }
-
-}
+// function checkIfFollowing(userID){
+//   isFollowing.value = false;
+//   fire.db.collection("Users")
+//   .doc(fire.auth.currentUser.uid)
+//   .collection("Following")
+//   .doc(userID)
+//   .get()
+//   .then((result)=>{
+//     if (result.exists){
+//       isFollowing.value = true;
+//     }
+//
+//   })
+// }
+//
+// function followOrUnfollow(userID, action){
+//   let getFollowings = fire.db.collection("Users").doc(fire.auth.currentUser.uid).collection("Following");
+//   let getUserFollowers = fire.db.collection("Users").doc(userID).collection("Followers");
+//   let getUser = fire.db.collection("Users")
+//       .doc(fire.auth.currentUser.uid);
+//   let numberOfFollowings;
+//   let numberOfUserFollowers;
+//
+//   getUser.get()
+//       .then((result)=>{
+//         numberOfFollowings = parseInt(result.data().Following)
+//       })
+//
+//   fire.db.collection("Users")
+//   .doc(userID)
+//   .get()
+//   .then((result)=>{
+//     numberOfUserFollowers = parseInt(result.data().Followers);
+//   })
+//
+//
+//
+//   switch (action){
+//     case "Unfollow":
+//       getFollowings.doc(userID).delete()
+//       .then(()=>{
+//         numberOfFollowings -= 1;
+//         numberOfUserFollowers -= 1;
+//         getUser.update({
+//           Following: parseInt(numberOfFollowings)
+//         })
+//         getUserFollowers.doc(fire.auth.currentUser.uid).delete();
+//         fire.db.collection("Users")
+//         .doc(userID)
+//         .update({
+//           Followers: parseInt(numberOfUserFollowers)
+//         })
+//       });
+//
+//
+//       isFollowing.value = false;
+//       break;
+//
+//     case "Follow":
+//         getFollowings.doc(userID)
+//           .set({
+//             Username: generalInfo[0].CreatorName
+//           })
+//           .then(()=>{
+//             isFollowing.value = true;
+//           })
+//         .then(()=>{
+//           numberOfFollowings += 1;
+//           getUser.update({
+//             Following: numberOfFollowings
+//           })
+//
+//           numberOfUserFollowers += 1;
+//
+//           fire.db.collection("Users")
+//           .doc(userID)
+//           .update({
+//             Followers: parseInt(numberOfUserFollowers)
+//           })
+//
+//           getUser.get()
+//           .then((result)=>{
+//             getUserFollowers.doc(fire.auth.currentUser.uid)
+//                 .set({
+//                   Username: result.data().Username
+//                 })
+//           })
+//
+//
+//         })
+//       break;
+//   }
+//
+// }
 
 function exit(){
   showDrinkInfo.value = false;
@@ -192,8 +192,8 @@ signedIn = fire.auth.currentUser !== null;
     <div class="rightSide">
       <h2 >Drink Name : {{generalInfo[0].DrinkName}}</h2>
       <h2 @click="goToUserProfile(generalInfo[0].CreatorID)">Creator : {{generalInfo[0].CreatorName}}</h2>
-      <button v-if="!isFollowing" @click="followOrUnfollow(generalInfo[0].CreatorID, 'Follow')">Follow</button>
-      <button v-else @click="followOrUnfollow(generalInfo[0].CreatorID, 'Unfollow')">Unfollow</button>
+<!--      <button v-if="!isFollowing" @click="followOrUnfollow(generalInfo[0].CreatorID, 'Follow')">Follow</button>-->
+<!--      <button v-else @click="followOrUnfollow(generalInfo[0].CreatorID, 'Unfollow')">Unfollow</button>-->
       <br>
       <img style=" margin-top:2em;width: 11em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
     </div>

@@ -19,7 +19,8 @@ async function getStuff(){
           ID: result.data().ID,
           Followers: result.data().Followers,
           Following: result.data().Following,
-          DrinksMade: result.data().DrinksMade
+          DrinksMade: result.data().DrinksMade,
+          GamesMade: result.data().GamesMade
         })
        checkIfFollowing();
       })
@@ -38,101 +39,22 @@ async function checkIfFollowing(){
 }
 
 
-function followOrUnfollow(action){
-  let user = fire.db.collection("Users").doc(fire.auth.currentUser.uid);
-  let otherUser = fire.db.collection("Users").doc(userInfo[0].ID);
-  let userFollowing = 0;
-  let otherUserFollowers = 0;
-  let currentUsername = ref("");
-
-
-  switch (action){
-    case "Follow":
-      user.get().then((result)=>{
-        userFollowing = parseInt(result.data().Following);
-        currentUsername.value = result.data().Username;
-      })
-      otherUser.get().then((result)=>{
-        otherUserFollowers = parseInt(result.data().Followers);
-      })
-
-
-
-
-
-      user.update({
-        Following: userFollowing += 1
-      })
-        .then(()=>{
-
-          console.log("Updating otherUser");
-          otherUser.update({
-            Followers: otherUserFollowers +=1
-          })
-        }).then(()=>{
-          console.log("Adding the followed user to main user account");
-          user.collection("Following")
-        .doc(userInfo[0].ID)
-        .set({
-          Username: userInfo[0].Username
-        })
-      })
-        .then(()=>{
-          console.log("Adding name to otherUsers followers")
-          otherUser.collection("Followers")
-          .doc(fire.auth.currentUser.uid)
-          .set({
-            Username: currentUsername.value
-          })
-        })
-        .then(()=>{
-          console.log("Redoing data");
-          getStuff();
-          isFollowing.value = true;
-        })
-      break;
-
-    case "Unfollow":
-      user.get().then((result)=>{
-        userFollowing = parseInt(result.data().Following);
-        currentUsername.value = result.data().Username;
-      })
-      otherUser.get().then((result)=>{
-        otherUserFollowers = parseInt(result.data().Followers);
-      })
-
-
-
-      console.log(userFollowing + "user following");
-      user.update({
-        Following: userFollowing -= 1
-      })
-          .then(()=>{
-
-            otherUser.update({
-              Followers: otherUserFollowers -=1
-            })
-          }).then(()=>{
-        user.collection("Following")
-            .doc(userInfo[0].ID).delete();
-      })
-          .then(()=>{
-
-            otherUser.collection("Followers")
-                .doc(fire.auth.currentUser.uid)
-                .delete();
-          })
-        .then(()=>{
-          getStuff();
-          isFollowing.value = false;
-
-        })
-      break;
-  }
-
-
-
-}
+// function followOrUnfollow(action){
+//
+//
+//   switch (action){
+//     case "Follow":
+//
+//       break;
+//
+//     case "Unfollow":
+//
+//       break;
+//   }
+//
+//
+//
+// }
 
 
 getStuff();
@@ -150,13 +72,12 @@ getStuff();
           <div class="allInfo">
             <h2 style="width: 100%;">{{item.Username}}</h2>
             <div class="stats">
-              <p><b>Followers: </b>{{item.Followers}}</p>
-              <p><b>Following: </b>{{item.Following}}</p>
+<!--              <p><b>Followers: </b>{{item.Followers}}</p>-->
+<!--              <p><b>Following: </b>{{item.Following}}</p>-->
               <p><b>Drinks Made: </b>{{item.DrinksMade}}</p>
+              <p><b>Games Made: </b>{{item.GamesMade}}</p>
             </div>
           </div>
-          <button @click="followOrUnfollow('Follow')" v-if="!isFollowing">Follow</button>
-          <button @click="followOrUnfollow('Unfollow')" v-else>Unfollow</button>
         </div>
       </div>
     </div>
