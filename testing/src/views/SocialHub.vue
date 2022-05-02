@@ -12,13 +12,16 @@ const router = useRouter();
 
 let userDrinks = reactive([]);
 
+let gameInfo = reactive([]);
+
 let userGames = reactive([]);
 
-let showDrinkInfo = ref(false);
+let showInfo = ref(false);
 
 let drinkInfo = reactive([]);
 
 let generalInfo = reactive([]);
+
 
 let isFollowing = ref(false);
 
@@ -38,7 +41,15 @@ function getDrinkInfo(index){
   }
   generalInfo.push(userDrinks[index].GeneralInfo);
   //checkIfFollowing(userDrinks[index].GeneralInfo.CreatorID);
-  showDrinkInfo.value = true;
+  showInfo.value = true;
+}
+
+
+function getGameInfo(index){
+  gameInfo.length = 0;
+  gameInfo.push(userGames[index]);
+  console.log(gameInfo);
+
 }
 
 // function checkIfFollowing(userID){
@@ -137,7 +148,7 @@ function getDrinkInfo(index){
 // }
 
 function exit(){
-  showDrinkInfo.value = false;
+  showInfo.value = false;
 }
 
 function refreshGames(){
@@ -149,7 +160,10 @@ function refreshGames(){
     result.forEach((post)=>{
       userGames.push({
         CreatorName: post.data().CreatorName,
-        Description: post.data().Description
+        Description: post.data().Description,
+        HowToPlay: post.data().HowToPlay,
+        CreatorID: post.data().CreatorID,
+        GameName: post.data().GameName
       })
     })
   })
@@ -170,6 +184,7 @@ function refreshDrinks(){
 }
 
 refreshDrinks();
+refreshGames();
 
 
 function goToUserProfile(userID){
@@ -191,7 +206,7 @@ signedIn = fire.auth.currentUser !== null;
 </script>
 
 <template>
-  <div v-if="showDrinkInfo" class="instructionDisplay">
+  <div v-if="showInfo" class="instructionDisplay">
     <div class="exit">
       <h1 @click="exit">X</h1>
     </div>
@@ -237,7 +252,21 @@ signedIn = fire.auth.currentUser !== null;
     </div>
 
     <div class="user_made_games">
-      <h1>User Made Games</h1>
+      <div>
+        <h1>User Made Games</h1>
+        <button @click="refreshGames">Refresh</button>
+      </div>
+
+      <div class="user_drink_display">
+        <div v-for="item in userGames">
+          <p>{{item.GameName}}</p>
+          <img @click="getGameInfo(userGames.indexOf(item))" src="../assets/images/gamePic.png" style="width: 11em; border-radius: 5px;" alt="">
+
+        </div>
+      </div>
+
+
+
     </div>
 
 
