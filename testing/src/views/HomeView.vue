@@ -4,7 +4,6 @@ import {ref, reactive, computed, onMounted, watch} from "vue";
 import fire from "../firebase.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-import MakeCocktail from "../components/MakeCocktail.vue";
 
 
 

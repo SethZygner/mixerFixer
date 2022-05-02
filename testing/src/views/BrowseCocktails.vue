@@ -5,6 +5,8 @@ import RandomCocktail from "../components/RandomCocktail.vue";
 import {reactive, ref} from "vue";
 import fire from "../firebase.js";
 import LoadingComponent from "../components/loadingScreenShaker.vue";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 //This simply changes the title shown in the tab when opened in an explorer of some kind
 document.title = "Browse Cocktails";
@@ -110,7 +112,6 @@ function removeIngredient(index){
 //This function takes the ingredient given by the user
 function enterIngredient(){
 
-
   if(ingredientInput.value.trim() !== ""){ //This "if" statement checks if the input the user made is valid (not empty)
 
     //Because the URL needs to have commas, this will check if the "ingArray" is empty and if it is,
@@ -124,7 +125,7 @@ function enterIngredient(){
 
       sendEnteredIngredientsURL(multipleIngredientUrl); //SE
 
-       //Pushes to the array for display in the "filter" div (seen below in template)
+      //Pushes to the array for display in the "filter" div (seen below in template)
 
       ingredientInput.value = "" //Sets the input back to empty for smooth transition to enter a new ingredient to add
 
@@ -151,7 +152,6 @@ function enterIngredient(){
     ingredientInput.value = ""; //Sets the input back to empty for smooth transition to enter a new ingredient to add
     alert("Must enter a valid ingredient!"); //Makes an alert to th user
   }
-
 }
 
 
@@ -181,18 +181,25 @@ function sendEnteredIngredientsURL(url){
 
 //Gets the specific Name and Picture for each drink listed
 function extractSpecifics(arr, prop, prop2, prop3){
-  let extractedValue = arr.map((item) => {
-    let name = item[prop];
-    let picture = item[prop2];
-    let theID = item[prop3];
-    return {
-      Name: name,
-      Picture: picture,
-      ID: theID
-    };
-  });
-  listedDrinks.push(extractedValue);
-  return extractedValue;
+  try{
+    let extractedValue = arr.map((item) => {
+      let name = item[prop];
+      let picture = item[prop2];
+      let theID = item[prop3];
+      return {
+        Name: name,
+        Picture: picture,
+        ID: theID
+      };
+    });
+    listedDrinks.push(extractedValue);
+    return extractedValue;
+  }catch(err){
+    alert("Oops! Either something was spelt wrong or that ingredient" +
+        " doesn't exist in out database! Try entering a" +
+        " different ingredient");
+  }
+
 }
 
 
@@ -374,7 +381,7 @@ loadingGif();
         <!-- If the listed drinks array is empty, then it will display whatever is in this div
          TODO: Make something more creative in here
          -->
-        <div v-if="listedDrinks.length === 0">
+        <div v-if="listedDrinks.length === 0 && ingArray.length === 0">
 
           <div>
 
@@ -382,6 +389,14 @@ loadingGif();
 
           </div>
 
+        </div>
+
+        <div v-else-if="ingArray.length !== 0 && listedDrinks.length === 0">
+          <div>
+            <h1>Oops! No drink in out database has these<br>ingredients!<br></h1>
+            <h3>Feel free to <span @click="router.push('/createCocktail')" class="linkPushed">make a drink of your own</span> or
+              <span @click="router.push('/socialHub')"  class="linkPushed">discover other users' drinks</span>!</h3>
+          </div>
         </div>
 
         <!-- If the listedDrinks array isn't empty, it will display this div -->
@@ -419,7 +434,7 @@ loadingGif();
        button-->
       <div v-else>
         <button  class="randomButton" @click="loadingGif">Generate Random</button>
-        <RandomCocktail />
+        <RandomCocktail class="randomComponent" />
       </div>
 
     </div>
@@ -722,6 +737,14 @@ loadingGif();
   display: none;
 }
 
+.linkPushed{
+  border-bottom: 1px black solid;
+}
+
+.linkPushed:hover{
+  border-bottom: purple;
+  cursor: pointer;
+}
 
 
 
@@ -731,16 +754,17 @@ loadingGif();
 
 /* Random Cocktail view styling */
 .RandomView{
-  margin-top: 2em;
-  border: 1px black solid;
+  margin-top: 1em;
   text-align: center;
-  margin-right: .5em;
   justify-content: center;
+  margin-right: 3.5em;
+
 }
 
 .randomButton{
   height: 4em;
   width: 10em;
+
   border-radius: 10px;
   border: none;
   background-color: rgba(180, 71, 204, .7);
@@ -750,6 +774,11 @@ loadingGif();
 .RandomView div{
   text-align: center;
   margin-top: 0;
+
+}
+
+.randomComponent{
+
 }
 
 

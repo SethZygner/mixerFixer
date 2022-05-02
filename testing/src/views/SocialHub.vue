@@ -16,7 +16,9 @@ let gameInfo = reactive([]);
 
 let userGames = reactive([]);
 
-let showInfo = ref(false);
+let showGameInfo = ref(false);
+
+let showDrinkInfo = ref(false);
 
 let drinkInfo = reactive([]);
 
@@ -41,15 +43,14 @@ function getDrinkInfo(index){
   }
   generalInfo.push(userDrinks[index].GeneralInfo);
   //checkIfFollowing(userDrinks[index].GeneralInfo.CreatorID);
-  showInfo.value = true;
+  showDrinkInfo.value = true;
 }
 
 
 function getGameInfo(index){
   gameInfo.length = 0;
   gameInfo.push(userGames[index]);
-  console.log(gameInfo);
-
+  showGameInfo.value = true;
 }
 
 // function checkIfFollowing(userID){
@@ -148,7 +149,8 @@ function getGameInfo(index){
 // }
 
 function exit(){
-  showInfo.value = false;
+  showDrinkInfo.value = false;
+  showGameInfo.value = false;
 }
 
 function refreshGames(){
@@ -158,13 +160,7 @@ function refreshGames(){
   .get()
   .then((result)=>{
     result.forEach((post)=>{
-      userGames.push({
-        CreatorName: post.data().CreatorName,
-        Description: post.data().Description,
-        HowToPlay: post.data().HowToPlay,
-        CreatorID: post.data().CreatorID,
-        GameName: post.data().GameName
-      })
+      userGames.push(post.data())
     })
   })
 }
@@ -193,10 +189,6 @@ function goToUserProfile(userID){
 
 }
 
-function showID(){
-  console.log(generalInfo[0].CreatorID);
-}
-
 
 signedIn = fire.auth.currentUser !== null;
 
@@ -206,7 +198,30 @@ signedIn = fire.auth.currentUser !== null;
 </script>
 
 <template>
-  <div v-if="showInfo" class="instructionDisplay">
+  <div v-for="item in gameInfo" v-if="showGameInfo" class="gameDisplay">
+    <div class="exit2">
+      <h1 @click="exit">X</h1>
+    </div>
+
+    <div class="gameSetup">
+      <p>{{item.Description}}</p>
+    </div>
+
+    <div>
+      <h2>{{item.GameName}}</h2>
+      <img style="width: 11em;" src="../assets/images/gamePic.png" alt="">
+      <p>{{item.CreatorName}}</p>
+    </div>
+
+    <div class="gamePlay">
+      <p>{{item.HowToPlay}}</p>
+    </div>
+
+  </div>
+
+
+
+  <div v-if="showDrinkInfo" class="instructionDisplay">
     <div class="exit">
       <h1 @click="exit">X</h1>
     </div>
@@ -223,7 +238,7 @@ signedIn = fire.auth.currentUser !== null;
     </div>
     <div class="rightSide">
       <h2 >Drink Name : {{generalInfo[0].DrinkName}}</h2>
-      <h2 @click="goToUserProfile(generalInfo[0].CreatorID)">Creator : {{generalInfo[0].CreatorName}}</h2>
+      <h2 @click="goToUserProfile(generalInfo[0].CreatorID)" >Creator : <span class="creatorsName">{{generalInfo[0].CreatorName}}</span></h2>
 <!--      <button v-if="!isFollowing" @click="followOrUnfollow(generalInfo[0].CreatorID, 'Follow')">Follow</button>-->
 <!--      <button v-else @click="followOrUnfollow(generalInfo[0].CreatorID, 'Unfollow')">Unfollow</button>-->
       <br>
@@ -261,7 +276,7 @@ signedIn = fire.auth.currentUser !== null;
         <div v-for="item in userGames">
           <p>{{item.GameName}}</p>
           <img @click="getGameInfo(userGames.indexOf(item))" src="../assets/images/gamePic.png" style="width: 11em; border-radius: 5px;" alt="">
-
+          <p>{{item.CreatorName}}</p>
         </div>
       </div>
 
@@ -347,7 +362,7 @@ button{
 
 
 
-.instructionDisplay{
+.instructionDisplay, .gameDisplay{
   width: 60em;
   height: 35em;
   background-color: rgba(0, 0, 0, .85);
@@ -365,31 +380,65 @@ button{
   grid-template-columns: 50% 50%;
 }
 
+.gameDisplay{
+  grid-template-columns: 33% 33% 33% !important;
+  padding: 1em;
+
+}
+
 .ingredients{
   display: grid;
   grid-template-columns: 50% 50%;
 
 }
 
+.creatorsName:hover{
+  color: #B447CC;
+  cursor: pointer;
+  border-bottom: 2px #B447CC solid;
+}
+
 .shownIng{
   border: 3px purple solid;
   height: 20em;
-  overflow: hidden;
-  overflow-x: scroll;
+  overflow: scroll;
+  overflow-x: hidden;
   margin-left: 1em;
   margin-top: 2em;
   border-radius: 6px;
   background-color: #B447CC;
 }
 
-.shownIng::-webkit-scrollbar{
+.gamePlay{
+  border: 3px purple solid;
+  height: 25em;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin-right: 1em;
+  margin-top: 2em;
+  border-radius: 6px;
+  background-color: #B447CC;
+}
+
+.gameSetup{
+  border: 3px purple solid;
+  height: 25em;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin-left: 1em;
+  margin-top: 2em;
+  border-radius: 6px;
+  background-color: #B447CC;
+}
+
+.shownIng::-webkit-scrollbar, .gameSetup::-webkit-scrollbar{
   display: none;
 }
 
 .shownDesc{
   margin: 3em;
-  overflow: hidden;
-  overflow-x: scroll;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .shownDesc::-webkit-scrollbar{
@@ -401,16 +450,26 @@ button{
   height: 2em;
 }
 
-.exit h1{
+.exit2{
+  grid-column: 1/4;
+  height: 4em;
+}
+
+.exit h1, .exit2 h1{
   float: left;
   margin-left: 2em;
   width: fit-content;
 }
 
-.exit h1, img:hover{
+.exit h1, img, .exit2 h1:hover{
   cursor: pointer;
 }
 
+
+
+.gamePlay::-webkit-scrollbar{
+  display: none;
+}
 
 
 </style>

@@ -46,43 +46,43 @@ function postDrink(arr){
       }
 
       fire.db.collection("Users")
-      .doc(fire.auth.currentUser.uid)
-      .get()
-      .then((result)=>{
-        let coins = result.data().Coins;
-        let amountPosted = result.data().DrinksMade;
-
-
-        if(coins > 0){
-          coins -= 1;
-          amountPosted += 1;
-          fire.db.collection("Users")
           .doc(fire.auth.currentUser.uid)
-          .update({
-            Coins: coins,
-            DrinksMade: amountPosted
-          }).then(()=>{
-            fire.db.collection("Users")
-                .doc(fire.auth.currentUser.uid)
-                .collection("MadeDrinks")
-                .add({
-                  DrinkInfo: drinkObj
-                })
-                .then((doc)=>{
-                  fire.db.collection("PublicDrinks")
-                      .doc(doc.id)
-                      .set({
-                        DrinkInfo: drinkObj
-                      })
-                })
+          .get()
+          .then((result)=>{
+            let coins = result.data().Coins;
+            let amountPosted = result.data().DrinksMade;
+
+
+            if(coins > 0){
+              coins -= 1;
+              amountPosted += 1;
+              fire.db.collection("Users")
+                  .doc(fire.auth.currentUser.uid)
+                  .update({
+                    Coins: coins,
+                    DrinksMade: amountPosted
+                  }).then(()=>{
+                fire.db.collection("Users")
+                    .doc(fire.auth.currentUser.uid)
+                    .collection("MadeDrinks")
+                    .add({
+                      DrinkInfo: drinkObj
+                    })
+                    .then((doc)=>{
+                      fire.db.collection("PublicDrinks")
+                          .doc(doc.id)
+                          .set({
+                            DrinkInfo: drinkObj
+                          })
+                    })
+              })
+
+
+
+            }else{
+              alert("You are out of coins!");
+            }
           })
-
-
-
-        }else{
-          alert("You are out of coins!");
-        }
-      })
 
 
     }else{
@@ -122,59 +122,59 @@ function deleteIngredient(index){
 </script>
 
 <template>
-<div class="allContent">
-  <div class="ingredientInput">
-    <div style="text-align: center; justify-content: center">
-      <input placeholder="Drink Name..." v-model="drinkName">
+  <div class="allContent">
+    <div class="ingredientInput">
+      <div style="text-align: center; justify-content: center">
+        <input placeholder="Drink Name..." v-model="drinkName">
 
-      <div class="ingredientInstructionInput">
-        <h2>Enter Instructions</h2>
-        <textarea maxlength="1000" v-model="description" style="resize: none;
+        <div class="ingredientInstructionInput">
+          <h2>Enter Instructions</h2>
+          <textarea maxlength="1000" v-model="description" style="resize: none;
          font-family: Bahnschrift,serif; padding: 5px; border: none;
           width: 35em; height: 15em; border-radius: 5px;"></textarea>
-        <br>
-        <button @click="postDrink(ingredientsArray)">Send</button>
-      </div>
-    </div>
-  </div>
-
-  <div>
-
-    <div class="ingredientStuff">
-      <input maxlength="30" v-model="ingredient" placeholder="Ingredient..." type="text">
-      <input v-model="amount" placeholder="Amount..." type="number">
-      <select v-model="measure" style="height: 3em; border-radius: 3px">
-        <option>oz</option>
-        <option v-if="amount > 1">cups</option>
-        <option v-else>cup</option>
-        <option>tbsp.</option>
-        <option>tsp.</option>
-        <option>mL</option>
-        <option v-if="amount > 1">liters</option>
-        <option v-else>liter</option>
-        <option v-if="amount > 1">parts</option>
-        <option v-else>part</option>
-        <option></option>
-      </select>
-
-      <br>
-      <button @click="addToList">Add Ingredient</button>
-    </div>
-
-    <div class="ingredientBox">
-      <div class="clearfix ingredient" style="width: 80%; margin: 1em auto; height: auto; text-align: center;" v-for="item in ingredientsArray">
-        <p >{{item.Ingredient}}</p>
-        <p >{{item.Measurement}}</p>
-        <div>
-          <button @click="deleteIngredient(ingredientsArray.indexOf(item))" style="height: 2em; width: 2em; ">X</button>
+          <br>
+          <button @click="postDrink(ingredientsArray)">Send</button>
         </div>
       </div>
     </div>
+
+    <div>
+
+      <div class="ingredientStuff">
+        <input maxlength="30" v-model="ingredient" placeholder="Ingredient..." type="text">
+        <input v-model="amount" placeholder="Amount..." type="number">
+        <select v-model="measure" style="height: 3em; border-radius: 3px">
+          <option>oz</option>
+          <option v-if="amount > 1">cups</option>
+          <option v-else>cup</option>
+          <option>tbsp.</option>
+          <option>tsp.</option>
+          <option>mL</option>
+          <option v-if="amount > 1">liters</option>
+          <option v-else>liter</option>
+          <option v-if="amount > 1">parts</option>
+          <option v-else>part</option>
+          <option></option>
+        </select>
+
+        <br>
+        <button @click="addToList">Add Ingredient</button>
+      </div>
+
+      <div class="ingredientBox">
+        <div class="clearfix ingredient" style="width: 80%; margin: 1em auto; height: auto; text-align: center;" v-for="item in ingredientsArray">
+          <p >{{item.Ingredient}}</p>
+          <p >{{item.Measurement}}</p>
+          <div>
+            <button @click="deleteIngredient(ingredientsArray.indexOf(item))" style="height: 2em; width: 2em; ">X</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
-
-
-
-</div>
 
 
 </template>
@@ -235,3 +235,4 @@ button{
 }
 
 </style>
+

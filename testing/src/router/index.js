@@ -30,14 +30,19 @@ const router = createRouter({
       component: () => import("../views/SocialHub.vue")
     },
     {
-      path: "/testScreen",
-      name: "testScreen",
-      component: ()=> import("../views/testScreen.vue")
-    },
-    {
       path: "/fellowUser",
       name: "fellowUser",
       component: ()=> import("../views/OtherUserAccount.vue")
+    },
+    {
+      path: "/createCocktail",
+      name: "createCocktail",
+      component: ()=> import("../views/CreateDrink.vue")
+    },
+    {
+      path: "/makeGame",
+      name: "makeGame",
+      component: ()=> import("../views/MakeGame.vue")
     }
   ],
 });
