@@ -12,6 +12,8 @@ const router = useRouter();
 
 let userDrinks = reactive([]);
 
+let userGames = reactive([]);
+
 let showDrinkInfo = ref(false);
 
 let drinkInfo = reactive([]);
@@ -138,7 +140,22 @@ function exit(){
   showDrinkInfo.value = false;
 }
 
-function refreshData(){
+function refreshGames(){
+  userGames.length = 0;
+
+  fire.db.collection("PublicGames")
+  .get()
+  .then((result)=>{
+    result.forEach((post)=>{
+      userGames.push({
+        CreatorName: post.data().CreatorName,
+        Description: post.data().Description
+      })
+    })
+  })
+}
+
+function refreshDrinks(){
   userDrinks.length = 0;
   fire.db.collection("PublicDrinks")
       .get()
@@ -152,7 +169,7 @@ function refreshData(){
       })
 }
 
-refreshData();
+refreshDrinks();
 
 
 function goToUserProfile(userID){
@@ -206,7 +223,7 @@ signedIn = fire.auth.currentUser !== null;
     <div class="user_made_drinks">
       <div>
         <h1>User Made Drinks</h1>
-        <button @click="refreshData">Refresh</button>
+        <button @click="refreshDrinks">Refresh</button>
       </div>
 
       <div class="user_drink_display">
@@ -223,29 +240,6 @@ signedIn = fire.auth.currentUser !== null;
       <h1>User Made Games</h1>
     </div>
 
-
-    <!--
- <div class="content">
-     <div>
-       <img class="tutorial_button" src="../assets/images/FlipCupTutorial.png" alt="">
-       <h3>Setup</h3>
-       <ol type="1">
-         <li>Split your group into even teams</li>
-         <li>Fill the cups. Pour each players drink of choice into his or her cup.</li>
-         <li>Line up on either side of the table with your drink in front of you.
-           Each person should be standing directly across from someone on the other team.
-         </li>
-       </ol>
-       <h3>Gameplay</h3>
-       <p>Flip Cup starts by the first people on each team chugging their beer, placing their empty cup back on the edge of
-         the table, and using their fingers to flip the cup completely upside down. Once the first player has successfully
-         “flipped” their solo cup, the next player will play their turn by chugging and flipping, and so on. The team to flip
-         their solo cups the fastest, wins!
-       </p>
-     </div>
-
-   </div>
-   -->
 
 <!--    <div class="game_section">-->
 <!--      <div>-->
