@@ -1,6 +1,8 @@
 <script setup>
 import fire from "../firebase.js";
 import {reactive, ref} from "vue";
+import router from "../router";
+import {useRouter} from "vue-router";
 
 
 let ingredientsArray = reactive([]);
@@ -13,6 +15,8 @@ let drinkName = ref("");
 let description = ref("");
 
 let coinAmount = ref(0);
+
+const router = useRouter();
 
 
 if(fire.auth.currentUser !== null){
@@ -82,7 +86,9 @@ function postDrink(arr){
             }else{
               alert("You are out of coins!");
             }
-          })
+          }).then(()=>{
+            router.push('/socialHub');
+      })
 
 
     }else{
@@ -123,23 +129,7 @@ function deleteIngredient(index){
 
 <template>
   <div class="allContent">
-    <div class="ingredientInput">
-      <div style="text-align: center; justify-content: center">
-        <input placeholder="Drink Name..." v-model="drinkName">
-
-        <div class="ingredientInstructionInput">
-          <h2>Enter Instructions</h2>
-          <textarea maxlength="1000" v-model="description" style="resize: none;
-         font-family: Bahnschrift,serif; padding: 5px; border: none;
-          width: 35em; height: 15em; border-radius: 5px;"></textarea>
-          <br>
-          <button @click="postDrink(ingredientsArray)">Send</button>
-        </div>
-      </div>
-    </div>
-
     <div>
-
       <div class="ingredientStuff">
         <input maxlength="30" v-model="ingredient" placeholder="Ingredient..." type="text">
         <input v-model="amount" placeholder="Amount..." type="number">
@@ -156,8 +146,6 @@ function deleteIngredient(index){
           <option v-else>part</option>
           <option></option>
         </select>
-
-        <br>
         <button @click="addToList">Add Ingredient</button>
       </div>
 
@@ -171,6 +159,23 @@ function deleteIngredient(index){
         </div>
       </div>
     </div>
+
+    <div class="ingredientInput">
+      <div style="text-align: center; justify-content: center">
+        <input placeholder="Drink Name..." v-model="drinkName">
+
+        <div class="ingredientInstructionInput">
+          <h2>Enter Instructions</h2>
+          <textarea maxlength="1000" v-model="description" style="resize: none;
+         font-family: Bahnschrift,serif; padding: 5px; border: none;
+          width: 35em; height: 15em; border-radius: 5px;"></textarea>
+          <br>
+          <button @click="postDrink(ingredientsArray)">Send</button>
+        </div>
+      </div>
+    </div>
+
+
 
 
 
@@ -199,7 +204,7 @@ input{
   height: 3em;
   border-radius: 3px;
   border: none;
-  width: 16em;
+  width: 11em;
   text-align: center;
 }
 
@@ -232,6 +237,28 @@ button{
   width: 9em;
   border-radius: 5px;
   border: none;
+  margin-bottom: 2em;
+  margin-left: 1em;
+}
+
+@media screen and (max-width: 1126px) {
+  .allContent{
+    display: block;
+    overflow-y: scroll;
+    height: 36em;
+  }
+
+  .allContent::-webkit-scrollbar{
+    display: none;
+  }
+
+
+}
+
+@media screen and (max-width: 410px){
+  input{
+    width: 6em;
+  }
 }
 
 </style>

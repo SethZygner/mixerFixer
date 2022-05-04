@@ -1,14 +1,16 @@
 <script setup>
 import fire from "../firebase.js";
 import { ref} from "vue";
+import {useRouter} from "vue-router";
 
 
-
+const rout = useRouter();
 let userName = ref("");
 let gameName = ref("");
 let description = ref("");
 let howToPlay = ref("");
 let coinAmount = ref(0);
+
 
 
 //Gets user's username
@@ -74,7 +76,9 @@ function postGame(){
                       }
                     })
               })
-        })
+        }).then(()=>{
+          rout.push('/socialHub');
+    })
   }else{
     alert("Invalid Input")
   }

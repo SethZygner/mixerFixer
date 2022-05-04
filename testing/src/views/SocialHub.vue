@@ -242,7 +242,7 @@ signedIn = fire.auth.currentUser !== null;
 <!--      <button v-if="!isFollowing" @click="followOrUnfollow(generalInfo[0].CreatorID, 'Follow')">Follow</button>-->
 <!--      <button v-else @click="followOrUnfollow(generalInfo[0].CreatorID, 'Unfollow')">Unfollow</button>-->
       <br>
-      <img style=" margin-top:2em;width: 11em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
+      <img style=" margin-top:2em;width: 17em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
     </div>
 
 
@@ -254,6 +254,7 @@ signedIn = fire.auth.currentUser !== null;
       <div>
         <h1>User Made Drinks</h1>
         <button @click="refreshDrinks">Refresh</button>
+        <button @click="router.push('/createCocktail')">Create Drink</button>
       </div>
 
       <div class="user_drink_display">
@@ -270,6 +271,7 @@ signedIn = fire.auth.currentUser !== null;
       <div>
         <h1>User Made Games</h1>
         <button @click="refreshGames">Refresh</button>
+        <button @click="router.push('/makeGame')">Create Game</button>
       </div>
 
       <div class="user_drink_display">
@@ -353,6 +355,7 @@ button{
   border-radius: 5px;
   height: 3em;
   width: 7em;
+  margin: 1em;
 }
 
 .user_drink_display::-webkit-scrollbar{

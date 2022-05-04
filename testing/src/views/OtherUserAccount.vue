@@ -5,14 +5,32 @@ import {reactive, ref} from "vue";
 
 let userInfo = reactive([]);
 
+let drinkInfo = reactive([]);
+
+let generalInfo = reactive([]);
+
 let gamesMade = reactive([]);
 
 let drinksMade = reactive([]);
 
+
+let showDrinkInfo = ref(false);
+
 let isFollowing = ref(false);
 
 
-
+function getDrinkInfo(index){
+  drinkInfo.length = 0;
+  generalInfo.length = 0;
+  let measurement = "Measurement";
+  for(let i = 0; i < Object.keys(drinksMade[index].DrinkInfo.DrinkInfo).length; i++){
+    drinkInfo.push(drinksMade[index].DrinkInfo.DrinkInfo[measurement+i.toString()])
+  }
+  generalInfo.push(drinksMade[index].DrinkInfo.GeneralInfo);
+  showDrinkInfo.value = true;
+  console.log(drinkInfo);
+  console.log(generalInfo);
+}
 
 async function getMadeGames(){
   await fire.db.collection("Users")
@@ -49,7 +67,7 @@ async function getStuff(){
       .then((result)=>{
         userInfo.push(result.data())
         getMadeGames();
-        getMadeDrinks()
+        getMadeDrinks();
 
       })
 
@@ -66,6 +84,9 @@ async function checkIfFollowing(){
   })
 }
 
+function exit(){
+  showDrinkInfo.value = false;
+}
 
 // function followOrUnfollow(action){
 //
@@ -91,7 +112,36 @@ getStuff();
 </script>
 
 <template>
+
+  <div v-if="showDrinkInfo" class="instructionDisplay">
+    <div class="exit">
+      <h1 @click="exit">X</h1>
+    </div>
+
+    <div class="leftSide">
+      <div class="shownIng">
+        <div class="ingredients" v-for="item in drinkInfo">
+          <h3>{{item.Ingredient}}</h3>
+          <h3>{{item.Measurement}}</h3>
+        </div>
+      </div>
+      <div class="shownDesc">
+        {{generalInfo[0].Description}}
+      </div>
+    </div>
+    <div class="rightSide">
+      <h2 >Drink Name : {{generalInfo[0].DrinkName}}</h2>
+      <h2 >Creator : <span class="creatorsName">{{generalInfo[0].CreatorName}}</span></h2>
+      <br>
+      <img style=" margin-top:2em;width: 17em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
+    </div>
+
+  </div>
   <div class="allContent">
+
+
+
+
     <div class="headerContent">
 
       <div class="informationOnUser" v-for="item in userInfo">
@@ -125,7 +175,7 @@ getStuff();
         <div class="contentMade">
           <div v-for="item in drinksMade">
             <p>{{item.DrinkInfo.GeneralInfo.DrinkName}}</p>
-            <img style="width: 11em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
+            <img @click="getDrinkInfo(drinksMade.indexOf(item))" style="width: 11em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
           </div>
         </div>
       </div>
@@ -244,6 +294,66 @@ img:hover{
 .noGames{
   text-align: center;
   margin-top: 3em;
+}
+
+.instructionDisplay{
+  width: 60em;
+  height: 35em;
+  background-color: rgba(0, 0, 0, .85);
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 2em;
+  z-index: 100;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.shownIng{
+  border: 3px purple solid;
+  height: 20em;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin-left: 1em;
+  margin-top: 2em;
+  border-radius: 6px;
+  background-color: #B447CC;
+}
+
+.ingredients{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+}
+
+.shownDesc{
+  margin: 3em;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.shownDesc::-webkit-scrollbar, .shownIng::-webkit-scrollbar{
+  display: none;
+}
+
+.exit{
+  grid-column: 1/3;
+  height: 2em;
+}
+
+.exit h1{
+  float: left;
+  margin-left: 2em;
+  width: fit-content;
+}
+
+.exit h1, img:hover{
+  cursor: pointer;
 }
 
 
