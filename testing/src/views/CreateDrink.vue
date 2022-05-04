@@ -1,7 +1,6 @@
 <script setup>
 import fire from "../firebase.js";
 import {reactive, ref} from "vue";
-import router from "../router";
 import {useRouter} from "vue-router";
 
 
