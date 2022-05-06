@@ -22,7 +22,6 @@ import fire from "./firebase.js";
           <li style="margin-top: 1em;"><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
           <li><RouterLink to="/socialHub">Social<br>Hub</RouterLink></li>
-          <li><RouterLink to="/test">Test</RouterLink></li>
           <li>
             <div>
               <RouterLink v-if="fire.signedIn.value" to="/Account" >Account</RouterLink>
