@@ -17,7 +17,7 @@ let coinAmount = ref(0);
 
 const router = useRouter();
 
-
+//Checks if a user is signed in
 if(fire.auth.currentUser !== null){
   fire.db.collection("Users")
       .doc(fire.auth.currentUser.uid)
@@ -29,27 +29,31 @@ if(fire.auth.currentUser !== null){
 
 
 
-
+//This function is a doozy, but it's what works for now until I move it to an SQL server instead
 function postDrink(arr){
+
+  //Tries to post drink
   try{
+
+    //Checks the length of the array to make the appropriate amount of ingredients and measurments
     if(arr.length !== 0 && description.value.trim() !== "" && drinkName.value.trim() !== "" && 9999 > parseFloat(amount.value) > -1 ){
       let drinkObj = {};
       let Measurement = "Measurement"
       let Measurements = reactive({});
+
       for (let i = 0; i < arr.length; i++){
         Measurements[Measurement+i.toString()] = arr[i]
       }
 
       drinkObj["DrinkInfo"] = Measurements;
 
-      //Move this maybe
       drinkObj["GeneralInfo"] = {
         DrinkName: drinkName.value,
         Description: description.value,
         CreatorName: userName.value,
         CreatorID: fire.auth.currentUser.uid
       }
-
+      //This gets the amount of coins the user has
       fire.db.collection("Users")
           .doc(fire.auth.currentUser.uid)
           .get()
@@ -57,7 +61,7 @@ function postDrink(arr){
             let coins = result.data().Coins;
             let amountPosted = result.data().DrinksMade;
 
-
+            //Subtracts a coin the user has to post a drink
             if(coins > 0){
               coins -= 1;
               amountPosted += 1;
@@ -67,25 +71,22 @@ function postDrink(arr){
                     Coins: coins,
                     DrinksMade: amountPosted
                   }).then(()=>{
+
+                    //This then adds the drink to the user who posted it
                 fire.db.collection("Users")
                     .doc(fire.auth.currentUser.uid)
                     .collection("MadeDrinks")
-                    .add({
-                      DrinkInfo: drinkObj
-                    })
+                    .add(drinkObj)
                     .then((doc)=>{
+
+
+
+                      //This then adds to the drinks in public drinks
                       fire.db.collection("PublicDrinks")
                           .doc(doc.id)
-                          .set({
-                            DrinkInfo: {
-                              DrinkName: drinkName.value,
-                              Description: description.value,
-                              CreatorName: userName.value,
-                              CreatorID: fire.auth.currentUser.uid,
-                              DrinkID: doc.id.toString()
-                            }
-                          })
+                          .set(drinkObj)
                       .then(()=>{
+                        //This updates the users made drinks to include the id
                         fire.db.collection("Users")
                         .doc(fire.auth.currentUser.uid)
                         .collection("MadeDrinks")
@@ -111,7 +112,7 @@ function postDrink(arr){
       alert("Missing some fields or a the 'Amount' is invalid");
     }
   }catch (err){
-    console.log(err.message);
+    console.log("Something happened");
   }
 }
 
@@ -196,8 +197,6 @@ function deleteIngredient(index){
 
 
   </div>
-
-
 </template>
 
 <style scoped>
@@ -212,8 +211,6 @@ function deleteIngredient(index){
   margin: 3em 2em;
 
 }
-
-
 
 input{
   margin: .5em;

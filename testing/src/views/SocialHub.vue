@@ -26,9 +26,6 @@ let showStar = ref(fire.auth.currentUser !== null);
 let isLiked = ref(false);
 
 
-let discordServerAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
-
-
 
 function checkIfFavorite(){
   try{
@@ -113,10 +110,12 @@ function refreshDrinks(){
       .get()
       .then((result)=>{
         result.forEach((post)=>{
+          console.log(post.data());
           userDrinks.push({
-            GeneralInfo: post.data().DrinkInfo.GeneralInfo,
-            DrinkInfo: post.data().DrinkInfo.DrinkInfo
+            GeneralInfo: post.data().GeneralInfo,
+            DrinkInfo: post.data().DrinkInfo
           })
+
         })
       })
 }
@@ -127,11 +126,8 @@ function goToUserProfile(userID){
 
 }
 
-
-
 refreshDrinks();
 refreshGames();
-
 
 </script>
 
@@ -200,10 +196,7 @@ refreshGames();
   </div>
 
 
-
-
-
-  <div class="signUpClass">
+  <div class="viewOfSocialStuff">
 
     <div class="user_made_drinks">
       <div>
@@ -213,7 +206,7 @@ refreshGames();
       </div>
 
       <div class="user_drink_display">
-        <div v-for="item in userDrinks">
+        <div v-for="item in userDrinks" >
           <p>{{item.GeneralInfo.DrinkName}}</p>
           <img @click="getDrinkInfo(userDrinks.indexOf(item))" style="width: 11em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
           <p>{{item.GeneralInfo.CreatorName}}</p>
@@ -243,10 +236,10 @@ refreshGames();
 
 
 
-<!--    <div class="social_chat">-->
-<!--      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"-->
-<!--              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>-->
-<!--    </div>-->
+    <div class="social_chat">
+      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </div>
 
 
   </div>
@@ -256,7 +249,7 @@ refreshGames();
 
 <style scoped>
 
-.signUpClass{
+.viewOfSocialStuff{
   display: grid;
   grid-template-columns: 50% 50%;
   width: 90%;
@@ -264,8 +257,11 @@ refreshGames();
   justify-content: center;
   height: 35em;
   margin: 2em auto;
-  overflow: hidden;
   overflow-y: scroll;
+}
+
+.viewOfSocialStuff::-webkit-scrollbar{
+  display: none;
 }
 
 .user_made_drinks{
@@ -286,9 +282,6 @@ refreshGames();
   overflow-x: hidden;
 }
 
-.findFriend{
-  height: 20em;
-}
 
 button{
   border: none;
@@ -296,6 +289,10 @@ button{
   height: 3em;
   width: 7em;
   margin: 1em;
+}
+
+button:hover{
+  cursor: pointer;
 }
 
 .user_drink_display::-webkit-scrollbar{

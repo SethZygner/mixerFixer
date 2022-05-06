@@ -109,7 +109,7 @@ function signIn(){
 
   <div class="allContent">
 
-    <div class="signUpClass" v-if="showSignUp">
+    <div class="viewOfSocialStuff" v-if="showSignUp">
       <h1>Sign Up</h1>
       <br>
       <input maxlength="16" type="text" v-model="newUserName" placeholder="Username">
@@ -153,7 +153,7 @@ function signIn(){
   grid-template-columns: 50% 50%;
 }
 
-.signUpClass, .signInClass{
+.viewOfSocialStuff, .signInClass{
   text-align: center;
   margin-top: 3em;
   height: 31em;
@@ -185,7 +185,7 @@ input{
   border: none;
 }
 
-.signUpClass input:focus{
+.viewOfSocialStuff input:focus{
   border: none;
 }
 

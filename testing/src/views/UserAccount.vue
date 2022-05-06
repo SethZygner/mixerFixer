@@ -264,7 +264,7 @@ getInfoOfUser();
 
         <div class="clearfix" id="topInfo">
           <h2 style="width: 12em; text-align: left">{{info[0].Username}}</h2>
-          <img style="float: right; width: 3em; margin-right: 2em;" src="../assets/icons/settingsIcon.png" @click="signOut">
+          <img alt="" style="float: right; width: 3em; margin-right: 2em;" src="../assets/icons/settingsIcon.png" @click="signOut">
         </div>
 
         <div class="clearfix" id="middleInfo">
@@ -316,7 +316,7 @@ getInfoOfUser();
       <div class="friendListContainer">
         <div class="listedFriendSearch" v-for="user in matched">
           <div @click="clickOnUser(user.ID)">
-            <img style="width: 3em" src="../assets/images/originalPic.png">
+            <img alt="" style="width: 3em" src="../assets/images/originalPic.png">
             <p>{{user.Username}}</p>
           </div>
         </div>
