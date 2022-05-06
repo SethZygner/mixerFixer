@@ -1,8 +1,5 @@
 <script setup>
 document.title = "Home";
-import {ref, reactive, computed, onMounted, watch} from "vue";
-import fire from "../firebase.js";
-import {onAuthStateChanged} from "firebase/auth";
 
 
 
@@ -15,7 +12,7 @@ import {onAuthStateChanged} from "firebase/auth";
   <div id="allContent">
 
     <div class="content1">
-      <img src="../assets/images/Image_1.png">
+      <img alt="" src="../assets/images/Image_1.png">
     </div>
 
     <div class="content2">

@@ -13,10 +13,56 @@ let gamesMade = reactive([]);
 
 let drinksMade = reactive([]);
 
+let isLiked = ref(false);
+
 
 let showDrinkInfo = ref(false);
 
 let isFollowing = ref(false);
+
+
+function checkIfFavorite(){
+  try{
+    if(fire.auth.currentUser !== null){
+      isLiked.value = false;
+      fire.db.collection("Users")
+          .doc(fire.auth.currentUser.uid)
+          .collection("UserFavorites")
+          .get()
+          .then((result)=>{
+            result.forEach((doc)=>{
+              if(doc.id.toString() === generalInfo[0].DrinkID){
+                isLiked.value = true;
+              }
+            })
+          })
+    }
+  }catch (err){
+    //Nothing to see here
+  }
+
+}
+
+function addToFavorites(){
+  let info = {
+    DrinkInfo: drinkInfo,
+    GeneralInfo: generalInfo[0]
+  }
+
+  fire.addUserDrinkToFavorites(generalInfo[0].DrinkID, info);
+  checkIfFavorite();
+}
+
+function removeFromFavorites(){
+  fire.db.collection("Users")
+      .doc(fire.auth.currentUser.uid)
+      .collection("UserFavorites")
+      .doc(generalInfo[0].DrinkID)
+      .delete()
+      .then(()=>{
+        checkIfFavorite();
+      })
+}
 
 
 function getDrinkInfo(index){
@@ -27,9 +73,10 @@ function getDrinkInfo(index){
     drinkInfo.push(drinksMade[index].DrinkInfo.DrinkInfo[measurement+i.toString()])
   }
   generalInfo.push(drinksMade[index].DrinkInfo.GeneralInfo);
+  if(fire.auth.currentUser !== null){
+    checkIfFavorite();
+  }
   showDrinkInfo.value = true;
-  console.log(drinkInfo);
-  console.log(generalInfo);
 }
 
 async function getMadeGames(){
@@ -73,37 +120,11 @@ async function getStuff(){
 
 }
 
-async function checkIfFollowing(){
-  let user = fire.db.collection("Users").doc(fire.auth.currentUser.uid);
-
-  await user.collection("Following")
-  .doc(userInfo[0].ID)
-  .get()
-  .then((result)=>{
-    isFollowing.value = result.exists;
-  })
-}
 
 function exit(){
   showDrinkInfo.value = false;
 }
 
-// function followOrUnfollow(action){
-//
-//
-//   switch (action){
-//     case "Follow":
-//
-//       break;
-//
-//     case "Unfollow":
-//
-//       break;
-//   }
-//
-//
-//
-// }
 
 
 getStuff();
@@ -115,7 +136,7 @@ getStuff();
 
   <div v-if="showDrinkInfo" class="instructionDisplay">
     <div class="exit">
-      <h1 @click="exit">X</h1>
+      <h1 class="exitButton" @click="exit">X</h1>
     </div>
 
     <div class="leftSide">
@@ -134,6 +155,9 @@ getStuff();
       <h2 >Creator : <span class="creatorsName">{{generalInfo[0].CreatorName}}</span></h2>
       <br>
       <img style=" margin-top:2em;width: 17em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
+      <br>
+      <img v-if="isLiked" @click="removeFromFavorites" style="width: 4em;" src="../assets/icons/saved.png" alt="">
+      <img  v-else @click="addToFavorites" style="width: 4em;" src="../assets/icons/unSaved.png" alt="">
     </div>
 
   </div>
@@ -146,12 +170,10 @@ getStuff();
 
       <div class="informationOnUser" v-for="item in userInfo">
         <div class="information">
-          <img class="profilePic"  src="../assets/images/originalPic.png">
+          <img alt="" class="profilePic"  src="../assets/images/originalPic.png">
           <div class="allInfo">
             <h2 style="width: 100%;">{{item.Username}}</h2>
             <div class="stats">
-<!--              <p><b>Followers: </b>{{item.Followers}}</p>-->
-<!--              <p><b>Following: </b>{{item.Following}}</p>-->
               <p><b>Drinks Made: </b>{{item.DrinksMade}}</p>
               <p><b>Games Made: </b>{{item.GamesMade}}</p>
             </div>
@@ -351,6 +373,7 @@ img:hover{
   margin-left: 2em;
   width: fit-content;
 }
+
 
 .exit h1, img:hover{
   cursor: pointer;

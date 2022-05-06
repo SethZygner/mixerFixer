@@ -1,12 +1,9 @@
 <script setup>
 import {reactive, ref} from "vue";
 import fire from "../firebase.js";
-import {RouterLink, useRouter} from "vue-router";
-import {onAuthStateChanged} from "firebase/auth";
-import OtherUserAccount from "./OtherUserAccount.vue"
+import {useRouter} from "vue-router";
 
-let array = reactive([]);
-let signedIn;
+
 
 const router = useRouter();
 
@@ -24,14 +21,55 @@ let drinkInfo = reactive([]);
 
 let generalInfo = reactive([]);
 
+let showStar = ref(fire.auth.currentUser !== null);
 
-let isFollowing = ref(false);
+let isLiked = ref(false);
+
+
+let discordServerAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
 
 
 
+function checkIfFavorite(){
+  try{
+    isLiked.value = false;
+    fire.db.collection("Users")
+        .doc(fire.auth.currentUser.uid)
+        .collection("UserFavorites")
+        .get()
+        .then((result)=>{
+          result.forEach((doc)=>{
+            if(doc.id.toString() === generalInfo[0].DrinkID){
+              isLiked.value = true;
+            }
+          })
+        })
+  }catch (err){
+    //Nothing to see here
+  }
 
-let serverAPI = "https://discord.com/api/guilds/965317787293732956/widget.json";
+}
 
+function addToFavorites(){
+  let info = {
+    DrinkInfo: drinkInfo,
+    GeneralInfo: generalInfo[0]
+  }
+
+  fire.addUserDrinkToFavorites(generalInfo[0].DrinkID, info);
+  checkIfFavorite();
+}
+
+function removeFromFavorites(){
+  fire.db.collection("Users")
+  .doc(fire.auth.currentUser.uid)
+  .collection("UserFavorites")
+  .doc(generalInfo[0].DrinkID)
+  .delete()
+  .then(()=>{
+    checkIfFavorite();
+  })
+}
 
 function getDrinkInfo(index){
   let measurement = "Measurement";
@@ -42,111 +80,15 @@ function getDrinkInfo(index){
 
   }
   generalInfo.push(userDrinks[index].GeneralInfo);
-  //checkIfFollowing(userDrinks[index].GeneralInfo.CreatorID);
+  checkIfFavorite();
   showDrinkInfo.value = true;
 }
-
 
 function getGameInfo(index){
   gameInfo.length = 0;
   gameInfo.push(userGames[index]);
   showGameInfo.value = true;
 }
-
-// function checkIfFollowing(userID){
-//   isFollowing.value = false;
-//   fire.db.collection("Users")
-//   .doc(fire.auth.currentUser.uid)
-//   .collection("Following")
-//   .doc(userID)
-//   .get()
-//   .then((result)=>{
-//     if (result.exists){
-//       isFollowing.value = true;
-//     }
-//
-//   })
-// }
-//
-// function followOrUnfollow(userID, action){
-//   let getFollowings = fire.db.collection("Users").doc(fire.auth.currentUser.uid).collection("Following");
-//   let getUserFollowers = fire.db.collection("Users").doc(userID).collection("Followers");
-//   let getUser = fire.db.collection("Users")
-//       .doc(fire.auth.currentUser.uid);
-//   let numberOfFollowings;
-//   let numberOfUserFollowers;
-//
-//   getUser.get()
-//       .then((result)=>{
-//         numberOfFollowings = parseInt(result.data().Following)
-//       })
-//
-//   fire.db.collection("Users")
-//   .doc(userID)
-//   .get()
-//   .then((result)=>{
-//     numberOfUserFollowers = parseInt(result.data().Followers);
-//   })
-//
-//
-//
-//   switch (action){
-//     case "Unfollow":
-//       getFollowings.doc(userID).delete()
-//       .then(()=>{
-//         numberOfFollowings -= 1;
-//         numberOfUserFollowers -= 1;
-//         getUser.update({
-//           Following: parseInt(numberOfFollowings)
-//         })
-//         getUserFollowers.doc(fire.auth.currentUser.uid).delete();
-//         fire.db.collection("Users")
-//         .doc(userID)
-//         .update({
-//           Followers: parseInt(numberOfUserFollowers)
-//         })
-//       });
-//
-//
-//       isFollowing.value = false;
-//       break;
-//
-//     case "Follow":
-//         getFollowings.doc(userID)
-//           .set({
-//             Username: generalInfo[0].CreatorName
-//           })
-//           .then(()=>{
-//             isFollowing.value = true;
-//           })
-//         .then(()=>{
-//           numberOfFollowings += 1;
-//           getUser.update({
-//             Following: numberOfFollowings
-//           })
-//
-//           numberOfUserFollowers += 1;
-//
-//           fire.db.collection("Users")
-//           .doc(userID)
-//           .update({
-//             Followers: parseInt(numberOfUserFollowers)
-//           })
-//
-//           getUser.get()
-//           .then((result)=>{
-//             getUserFollowers.doc(fire.auth.currentUser.uid)
-//                 .set({
-//                   Username: result.data().Username
-//                 })
-//           })
-//
-//
-//         })
-//       break;
-//   }
-//
-// }
 
 function exit(){
   showDrinkInfo.value = false;
@@ -179,10 +121,6 @@ function refreshDrinks(){
       })
 }
 
-refreshDrinks();
-refreshGames();
-
-
 function goToUserProfile(userID){
   fire.setProfileId(userID);
   router.push("/fellowUser");
@@ -190,28 +128,32 @@ function goToUserProfile(userID){
 }
 
 
-signedIn = fire.auth.currentUser !== null;
 
-
+refreshDrinks();
+refreshGames();
 
 
 </script>
 
 <template>
   <div v-for="item in gameInfo" v-if="showGameInfo" class="gameDisplay">
+
     <div class="exit2">
       <h1 @click="exit">X</h1>
     </div>
 
+
     <div class="gameSetup">
       <p>{{item.Description}}</p>
     </div>
+
 
     <div>
       <h2>{{item.GameName}}</h2>
       <img style="width: 11em;" src="../assets/images/gamePic.png" alt="">
       <p>{{item.CreatorName}}</p>
     </div>
+
 
     <div class="gamePlay">
       <p>{{item.HowToPlay}}</p>
@@ -220,11 +162,12 @@ signedIn = fire.auth.currentUser !== null;
   </div>
 
 
-
   <div v-if="showDrinkInfo" class="instructionDisplay">
     <div class="exit">
       <h1 @click="exit">X</h1>
     </div>
+
+
     <div class="leftSide">
       <div class="shownIng">
         <div class="ingredients" v-for="item in drinkInfo">
@@ -236,17 +179,29 @@ signedIn = fire.auth.currentUser !== null;
         {{generalInfo[0].Description}}
       </div>
     </div>
+
+
     <div class="rightSide">
       <h2 >Drink Name : {{generalInfo[0].DrinkName}}</h2>
       <h2 @click="goToUserProfile(generalInfo[0].CreatorID)" >Creator : <span class="creatorsName">{{generalInfo[0].CreatorName}}</span></h2>
-<!--      <button v-if="!isFollowing" @click="followOrUnfollow(generalInfo[0].CreatorID, 'Follow')">Follow</button>-->
-<!--      <button v-else @click="followOrUnfollow(generalInfo[0].CreatorID, 'Unfollow')">Unfollow</button>-->
       <br>
       <img style=" margin-top:2em;width: 17em; border-radius: 5px;" src="../assets/images/drinkPlaceholder.jpg" alt="">
+      <br>
+      <div v-if="showStar">
+        <img v-if="isLiked" @click="removeFromFavorites" style="width: 4em;" src="../assets/icons/saved.png" alt="">
+        <img  v-else @click="addToFavorites" style="width: 4em;" src="../assets/icons/unSaved.png" alt="">
+      </div>
+      <div v-else>
+        <h2><span @click="router.push('/logInSignUp')" class="clickLink">Sign in</span> to favorite!</h2>
+      </div>
+
     </div>
 
-
   </div>
+
+
+
+
 
   <div class="signUpClass">
 
@@ -254,7 +209,7 @@ signedIn = fire.auth.currentUser !== null;
       <div>
         <h1>User Made Drinks</h1>
         <button @click="refreshDrinks">Refresh</button>
-        <button @click="router.push('/createCocktail')">Create Drink</button>
+        <button v-if="fire.signedIn.value" @click="router.push('/createCocktail')">Create Drink</button>
       </div>
 
       <div class="user_drink_display">
@@ -271,7 +226,7 @@ signedIn = fire.auth.currentUser !== null;
       <div>
         <h1>User Made Games</h1>
         <button @click="refreshGames">Refresh</button>
-        <button @click="router.push('/makeGame')">Create Game</button>
+        <button v-if="fire.signedIn.value" @click="router.push('/makeGame')">Create Game</button>
       </div>
 
       <div class="user_drink_display">
@@ -287,26 +242,6 @@ signedIn = fire.auth.currentUser !== null;
     </div>
 
 
-<!--    <div class="game_section">-->
-<!--      <div>-->
-<!--        <img src="../assets/icons/ShareDrink2.jpg" alt="">-->
-<!--        <p>Share a drink</p>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <img src="../assets/icons/Discover.png" alt="">-->
-<!--        <p>Discover User Drinks</p>-->
-<!--      </div>-->
-
-<!--      <div>-->
-<!--        <img src="../assets/icons/RevisedCreateGame.jpg" alt="">-->
-<!--        <p>Drinking Games</p>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <img style="width: 8em;" src="../assets/icons/DrinkingGameIcon2.png">-->
-<!--        <p>Create A Game</p>-->
-<!--      </div>-->
-
-<!--    </div>-->
 
 <!--    <div class="social_chat">-->
 <!--      <iframe src="https://discord.com/widget?id=965317787293732956&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"-->
@@ -329,8 +264,9 @@ signedIn = fire.auth.currentUser !== null;
   justify-content: center;
   height: 35em;
   margin: 2em auto;
+  overflow: hidden;
+  overflow-y: scroll;
 }
-
 
 .user_made_drinks{
   height: 35em;
@@ -350,6 +286,10 @@ signedIn = fire.auth.currentUser !== null;
   overflow-x: hidden;
 }
 
+.findFriend{
+  height: 20em;
+}
+
 button{
   border: none;
   border-radius: 5px;
@@ -361,9 +301,6 @@ button{
 .user_drink_display::-webkit-scrollbar{
   display: none;
 }
-
-
-
 
 .instructionDisplay, .gameDisplay{
   width: 60em;
@@ -468,12 +405,20 @@ button{
   cursor: pointer;
 }
 
-
-
 .gamePlay::-webkit-scrollbar{
   display: none;
 }
 
+.clickLink{
+  border-bottom: 2px white solid;
+
+}
+
+
+.clickLink:hover{
+  border: none;
+  cursor: pointer;
+}
 
 </style>
 

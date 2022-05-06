@@ -41,6 +41,8 @@ function postDrink(arr){
       }
 
       drinkObj["DrinkInfo"] = Measurements;
+
+      //Move this maybe
       drinkObj["GeneralInfo"] = {
         DrinkName: drinkName.value,
         Description: description.value,
@@ -75,8 +77,23 @@ function postDrink(arr){
                       fire.db.collection("PublicDrinks")
                           .doc(doc.id)
                           .set({
-                            DrinkInfo: drinkObj
+                            DrinkInfo: {
+                              DrinkName: drinkName.value,
+                              Description: description.value,
+                              CreatorName: userName.value,
+                              CreatorID: fire.auth.currentUser.uid,
+                              DrinkID: doc.id.toString()
+                            }
                           })
+                      .then(()=>{
+                        fire.db.collection("Users")
+                        .doc(fire.auth.currentUser.uid)
+                        .collection("MadeDrinks")
+                        .doc(doc.id.toString())
+                        .update({
+                          DrinkID: doc.id
+                        })
+                      })
                     })
               })
 

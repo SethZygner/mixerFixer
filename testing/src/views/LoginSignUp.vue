@@ -204,9 +204,6 @@ button:hover{
   cursor: pointer;
 }
 
-.hide{
-  display: none;
-}
 
 
 

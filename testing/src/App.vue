@@ -1,26 +1,6 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import {getAuth, onAuthStateChanged} from "firebase/auth";
-import {onMounted, ref} from "vue";
+
 import fire from "./firebase.js";
-
-
-
-let isLoggedIn = ref(false);
-let auth = getAuth();
-
-
-async function checkSignedIn(){
-  await onMounted(()=>{
-    onAuthStateChanged(fire.auth, ()=>{
-      if(fire.auth.currentUser !== null){
-        isLoggedIn.value = true;
-      }
-    })
-  })
-}
-
-checkSignedIn();
 
 </script>
 
@@ -33,7 +13,7 @@ checkSignedIn();
     <div class="mainScreen">
       <div id="menu">
         <div class="constant clearfix">
-          <img id="logo" src="@/assets/images/mixerfixer.png" alt="Mixer Fixer">
+          <img id="logo" src="./assets/images/mixerfixer.png" alt="Mixer Fixer">
           <img id="hamburger" src="./assets/icons/hamburgerMenu.png" alt="Menu">
         </div>
 
@@ -41,9 +21,10 @@ checkSignedIn();
           <li style="margin-top: 1em;"><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/browseCocktails">Browse<br>Cocktails</RouterLink></li>
           <li><RouterLink to="/socialHub">Social<br>Hub</RouterLink></li>
+          <li><RouterLink to="/test">Test</RouterLink></li>
           <li>
             <div>
-              <RouterLink v-if="isLoggedIn.valueOf()" to="/Account" >Account</RouterLink>
+              <RouterLink v-if="fire.signedIn.value" to="/Account" >Account</RouterLink>
               <RouterLink v-else to="/logInSignUp" >Login/<br>Sign Up</RouterLink>
             </div>
           </li>
@@ -138,9 +119,6 @@ Menu Style
 Adapt to resolutions
  */
 @media screen and (max-width: 1140px){
-  #side-bar{
-    display: none;
-  }
   #logo{
     width: 50px;
   }

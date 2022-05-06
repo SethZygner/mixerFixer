@@ -21,6 +21,8 @@ let apiKey = "9973533";  //SE
 
 let isLiked = ref(false);
 
+
+
 let drinkInfo = reactive([]); //All drink information needed based on ingredients chosen
 
 let loadingIconIsShown = ref(true); //Initializes the loading icon to show for the random cocktail section
@@ -33,26 +35,16 @@ let ingArray = reactive([]); //Holds the multiple ingredients the user inputted
 
 let listedDrinks = reactive([]); //Drinks displayed from what the user has inputted
 
+let likedAnimation = ref(false);
+
+let unlikedShow = ref(false);
+
 let multipleIngredientUrl; //Initialize the URL for function "enterIngredient(ing)"
 
 let arrayOfIngredientsFromAPI = reactive([]);
 
 let matched = reactive([]);
 
-
-// function autoSuggest(arr){
-//   if(typed.value.trim() === ""){
-//     matched.length = 0;
-//   }else {
-//     matched.length = 0;
-//     arr.forEach((item)=>{
-//       if(item.Username.substr(0, typed.value.length).toLowerCase() === typed.value.toLowerCase()){
-//         matched.push(item);
-//       }
-//     });
-//   }
-//
-// }
 
 
 function getIngredients(){
@@ -66,7 +58,7 @@ function getIngredients(){
         })
       })
 }
-getIngredients();
+
 
 function autoSuggestIngredients(arr){
   if(ingredientInput.value.trim() === ""){
@@ -80,10 +72,6 @@ function autoSuggestIngredients(arr){
     })
   }
 }
-
-
-
-
 
 
 //Removes an ingredient from the list made
@@ -228,8 +216,6 @@ function loadingGif(){
 }
 
 
-
-
 //Get all relevant information about the drink clicked
 function selectedDrink(index){
   drinkInfo.length = 0; //Resets the specific drink information, so it doesn't have more than 1 drink in it
@@ -260,8 +246,6 @@ function selectedDrink(index){
 }
 
 
-
-
 //This function checks if the item is already favorite
 function favorites(drinkId){
 
@@ -277,7 +261,6 @@ function favorites(drinkId){
         if(parseInt(doc.id) === drinkId){
           isLiked.value = true;
           return isLiked.value = true;
-
         }
       })
 
@@ -288,14 +271,21 @@ function favorites(drinkId){
 
 }
 
+
 function addToFavorites(docID, drink){
   fire.addApiToFavorites(docID, drink);
 
   favorites(parseInt(docID));
-
   isLiked.value = true;
 
+  likedAnimation.value = true;
+
+  setTimeout(()=>{
+    likedAnimation.value = false;
+  }, 500);
+
 }
+
 
 function removeFromFavorites(docID){
   try{
@@ -307,10 +297,12 @@ function removeFromFavorites(docID){
     console.log(err.message);
   }
 
+
+
+  likedAnimation.value = false;
   isLiked.value = false;
 
 }
-
 
 //Exits from the display shown for the selected drink
 function exitOut(){
@@ -319,6 +311,7 @@ function exitOut(){
 
 
 //Initial Function Calls (for initial things to happen)
+getIngredients();
 loadingGif();
 
 
@@ -385,7 +378,7 @@ loadingGif();
 
           <div>
 
-            <h1>Make some drinks using<br>the search bar!</h1>
+            <h1>Find some drinks using<br>the search bar!</h1>
 
           </div>
 
@@ -394,8 +387,10 @@ loadingGif();
         <div v-else-if="ingArray.length !== 0 && listedDrinks.length === 0">
           <div>
             <h1>Oops! No drink in out database has these<br>ingredients!<br></h1>
-            <h3>Feel free to <span @click="router.push('/createCocktail')" class="linkPushed">make a drink of your own</span> or
-              <span @click="router.push('/socialHub')"  class="linkPushed">discover other users' drinks</span>!</h3>
+            <h3>Feel free to <span class="linkPushed" @click="router.push('socialHub')">discover users' drinks</span>!</h3>
+            <h3 v-if="fire.signedIn.value"  @click="router.push('/createCocktail')">Or <span class="linkPushed">create your own</span>!</h3>
+            <h3 v-else>Or <span class="linkPushed" @click="router.push('/logInSignUp')">login/sign</span> up to create your own!</h3>
+
           </div>
         </div>
 
@@ -445,17 +440,28 @@ loadingGif();
     <div v-if="drinkHasBeenSelected" class="selectedDrinkDisplay" >
 
 
-
-
-
       <!-- This is a simple 'X' so the user can exit out of the drink display -->
-        <div class="clearfix exit" style="width: 100%; text-align: center;">
+        <div class="clearfix exit" style="width: 100%;  height: 4em; text-align: center;">
           <h2 @click="exitOut" style="margin-right: 2em; float: left;  width: 3em;">X</h2>
-          <img v-if="!isLiked" style="width: 4em; position: relative; right: 3.7em;  border: none;" src="../assets/icons/unSaved.png"
-               @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">
+          <div v-if="fire.signedIn.value">
+            <div v-if="!isLiked">
+              <img  style="width: 4em; position: relative; right: 3.7em;  border: none;" src="../assets/icons/unSaved.png"
+                    @click="()=>{addToFavorites(drinkInfo[0].drinks[0].idDrink, drinkInfo[0].drinks[0])}">
 
-          <img v-else src="../assets/icons/saved.png" style="width: 4em; position: relative; right: 3.7em; border: none"
-               @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">
+            </div>
+            <div v-else>
+              <img v-if="likedAnimation" style="width: 4em; position: relative; right: 3.7em;  border: none;"  src="../assets/loadingIcons/likedAnimation.gif" alt="">
+              <img v-else  src="../assets/icons/saved.png" style="width: 4em; position: relative; right: 3.7em; border: none"
+                   @click="removeFromFavorites(drinkInfo[0].drinks[0].idDrink)">
+            </div>
+
+
+
+          </div>
+          <div v-else style="position: relative; right: 3.6em;">
+            <h3><span @click="router.push('/logInSignUp')" class="linkPushed" style="border-bottom: 2px white solid;"><b>Sign Up</b></span> to favorite!</h3>
+          </div>
+
         </div>
 
 
@@ -616,6 +622,7 @@ loadingGif();
 .fullContent{
   display: grid;
   grid-template-columns: 37.5% 25% 37.5%;
+  margin: 1em auto;
 }
 
 .selectedDrinkDisplay{

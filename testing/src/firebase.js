@@ -1,6 +1,6 @@
 import "firebase/firestore";
 import firebase from "firebase/compat";
-import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
 import 'firebase/compat/auth';
 import {reactive, ref} from "vue";
 
@@ -18,12 +18,19 @@ const config = {
 firebase.initializeApp(config);
 
 
-
+let signedIn = ref(false);
 let db = firebase.firestore();
 let auth = reactive(getAuth());
 let userId = ref("");
 
 let arrayOfUsers = reactive([]);
+
+
+
+onAuthStateChanged(auth, ()=>{
+    signedIn.value = auth.currentUser !== null;
+})
+
 
 
 
@@ -33,9 +40,12 @@ function newUser(email, password){
         .catch((err)=>{
             alert(err.message);
         })
+
 }
 function signOut(){
-    auth.signOut().then(r => console.log(r));
+    auth.signOut().then(()=>{
+        signedIn.value = false;
+    });
 }
 
 
@@ -74,24 +84,8 @@ async function getAllUsers(arr){
 }
 
 await getAllUsers(arrayOfUsers);
+console.log(arrayOfUsers);
 
-
-//Chat functions
-//TODO: Add cloud storage when possible for image uploads
-function commentOnAPIDrink (itemID, userID, comment){
-    db.collection("API Item Info")
-        .doc(itemID)
-        .collection("Comments")
-        .doc()
-        .set(
-            {
-                UID: userID,
-                UserComment: comment
-            })
-        .catch((err) => {
-            alert(err.message);
-        })
-}
 
 
 //Favorites functions
@@ -110,13 +104,25 @@ function addApiToFavorites(docId, drink){
     }
 }
 
+function addUserDrinkToFavorites(drinkID, drinkInfo){
+    db.collection("Users")
+        .doc(auth.currentUser.uid)
+        .collection("UserFavorites")
+        .doc(drinkID)
+        .set(drinkInfo)
+}
+
+
+
 
 export default{
     addUser,
     newUser,
     signOut,
     addApiToFavorites,
+    addUserDrinkToFavorites,
     getAllUsers,
+    signedIn,
     setProfileId,
     userId,
     arrayOfUsers,

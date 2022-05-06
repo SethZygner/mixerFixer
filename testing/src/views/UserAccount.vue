@@ -3,6 +3,7 @@ import {useRouter} from "vue-router";
 import fire from "../firebase.js";
 import {reactive, ref} from "vue";
 import {onAuthStateChanged} from "firebase/auth";
+
 const router = useRouter();
 
 
@@ -22,6 +23,10 @@ let userBio = ref("");
 
 let changeBio = ref(false);
 
+let drinkInfo = reactive([]);
+
+let showInfo = ref(false);
+
 let info = reactive([]);
 
 let arrayOfUsers = fire.arrayOfUsers;
@@ -30,7 +35,55 @@ let matched = reactive([]);
 
 let typed = ref("");
 
+let getDrinkURL ="https://www.thecocktaildb.com/api/json/v1/1/search.php?s=Mojito&api_key=1"
 
+
+
+function clickedAPIFavorite(index){
+  let getDrinkURL ="https://www.thecocktaildb.com/api/json/v1/1/search.php?s="+APIFavorites[index].Name+"&api_key=1";
+
+  drinkInfo.length = 0;
+  fetch(getDrinkURL)
+  .then((result)=>{
+    return result.json();
+  })
+  .then((item)=>{
+
+    let ingredientsArray = [];
+    let generalInfo;
+    for (let i = 0; i<= Object.keys(item.drinks[0]).length; i++){
+      let measurement = "strMeasure";
+      let ingredient = "strIngredient";
+      let finalIngredient = item.drinks[0][ingredient+(i+1).toString()]
+      let finalMeasurement = item.drinks[0][measurement+(i+1).toString()];
+      if(finalIngredient !== null && finalIngredient !== undefined){
+        ingredientsArray.push({
+          Ingredient: finalIngredient,
+          Measurement: finalMeasurement
+
+        })
+      }
+    }
+
+    generalInfo = {
+      DrinkId: item.drinks[0]["idDrink"],
+      DrinkName: item.drinks[0]["strDrink"],
+      Instructions: item.drinks[0]["strInstructions"],
+      Image: item.drinks[0]["strDrinkThumb"]
+    }
+
+    drinkInfo.push({
+      DrinkMeasurements: ingredientsArray,
+      GeneralInfo: generalInfo
+    });
+    console.log(drinkInfo);
+    })
+  .then(()=>{
+    showInfo.value = true;
+  })
+
+
+}
 
 //Finds suggested users when searching for friends
 function autoSuggest(arr){
@@ -60,25 +113,28 @@ async function getInfoOfUser(){
   try{
     info.length = 0;
    await onAuthStateChanged(fire.auth, ()=>{
-      fire.db.collection("Users")
-          .doc(fire.auth.currentUser.uid)
-          .get()
-          .then((compData)=>{
-            let object = {
-              Username: compData.data().Username,
-              Bio: compData.data().Bio,
-              Followers: compData.data().Followers,
-              Following: compData.data().Following,
-              GamesMade: compData.data().GamesMade,
-              DrinksMade: compData.data().DrinksMade,
-              Coins: compData.data().Coins
-            }
+     try{
+       fire.db.collection("Users")
+           .doc(fire.auth.currentUser.uid)
+           .get()
+           .then((compData)=>{
+             let object = {
+               Username: compData.data().Username,
+               Bio: compData.data().Bio,
+               GamesMade: compData.data().GamesMade,
+               DrinksMade: compData.data().DrinksMade,
+               Coins: compData.data().Coins
+             }
 
-            hasBio.value = object.Bio !== "";
+             hasBio.value = object.Bio !== "";
 
-            info.push(object);
-          })
-      getSavedAPIDrinks();
+             info.push(object);
+           })
+       getSavedAPIDrinks();
+     }catch (err){
+       console.log("No user signed in");
+     }
+
     })
 
   }catch(err){
@@ -124,10 +180,28 @@ async function getSavedAPIDrinks(){
   })
 }
 
-
 function clickOnUser(userID){
   fire.setProfileId(userID);
   router.push("/fellowUser");
+}
+
+function removeFromFavorites(docID){
+  try{
+    showInfo.value = false;
+    fire.db.collection("Users")
+        .doc(fire.auth.currentUser.uid)
+        .collection("APIFavorites")
+        .doc(docID).delete().then(()=>{
+          getInfoOfUser();
+    })
+  }catch(err){
+    console.log(err.message);
+  }
+
+}
+
+function exit(){
+  showInfo.value = false;
 }
 
 getInfoOfUser();
@@ -140,6 +214,46 @@ getInfoOfUser();
 
 
 <div id="wholePage">
+
+  <div v-if="showInfo" class="shownInfo clearfix">
+    <div class="exit" style="text-align: center">
+      <h1 style="float: left;" @click="exit">X</h1>
+      <img @click="removeFromFavorites(drinkInfo[0].GeneralInfo.DrinkId)" style="width: 4em; border: none; margin-right: 3em" src="../assets/icons/saved.png" alt="">
+    </div>
+
+    <div class="fullInfo">
+      <div class="ingDisplay">
+        <div v-for="item in drinkInfo[0].DrinkMeasurements" class="ingAndMeasure">
+          <div class="shownIng">
+            <div>
+              <p>{{item.Ingredient}}</p>
+            </div>
+            <div>
+              <p>{{item.Measurement}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nameAndImg">
+        <h1>{{drinkInfo[0].GeneralInfo.DrinkName}}</h1>
+        <img :src=drinkInfo[0].GeneralInfo.Image alt="">
+      </div>
+
+
+      <!-- At the far right is the instructions -->
+      <div class="instructions">
+        <p>{{drinkInfo[0].GeneralInfo.Instructions}}</p>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+
   <div class="headerContent">
 <!--    <input @input="autoSuggest(arrayOfUsers)" v-model="typed">-->
 
@@ -154,8 +268,6 @@ getInfoOfUser();
         </div>
 
         <div class="clearfix" id="middleInfo">
-<!--          <p><b>Followers: </b>{{info[0].Followers}}</p>-->
-<!--          <p><b>Following: </b>{{info[0].Following}}</p>-->
           <p><b>Drinks Posted: </b>{{info[0].DrinksMade}}</p>
           <p><b>Games Posted: </b>{{info[0].GamesMade}}</p>
           <p><b>Coins: </b>{{info[0].Coins}}</p>
@@ -180,12 +292,16 @@ getInfoOfUser();
     </div>
   </div>
 
+
+
+
+
   <div class="personalDrinkStuff">
 
     <div id="favoriteDrinks">
       <div style="text-align: center" v-for="drink in APIFavorites">
         <p>{{drink.Name}}</p>
-        <img :src="drink.Image" :alt="drink.Name">
+        <img class="favoritesImg" @click="clickedAPIFavorite(APIFavorites.indexOf(drink))" :src="drink.Image" :alt="drink.Name">
       </div>
 
     </div>
@@ -208,6 +324,9 @@ getInfoOfUser();
     </div>
 
   </div>
+
+
+
 </div>
 
 
@@ -307,9 +426,13 @@ getInfoOfUser();
   display: none;
 }
 
-#favoriteDrinks div img{
+.favoritesImg{
   width: 10em;
   border-radius: 6px;
+}
+
+.favoritesImg:hover{
+  cursor: pointer;
 }
 
 .friendInput{
@@ -340,6 +463,77 @@ getInfoOfUser();
 .friendListContainer div p{
   float: right;
   margin-right: 2em;
+}
+
+.shownIng{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.ingDisplay, .instructions{
+  background-color: #B447CC;
+  border: 4px purple solid;
+  width: 80%;
+  height: 23em;
+  overflow: scroll;
+  overflow-x: hidden;
+  border-radius: 10px;
+  margin: 2em;
+
+
+}
+
+.ingDisplay::-webkit-scrollbar, .instructions::-webkit-scrollbar{
+  display: none;
+}
+
+
+
+.shownInfo{
+  width: 60em;
+  height: 35em;
+  background-color: rgba(0, 0, 0, .85);
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 2em;
+  z-index: 10;
+  color: white;
+  border-radius: 10px;
+}
+
+
+.fullInfo{
+  display: grid;
+  text-align: center;
+  grid-template-columns: 37.5% 25% 37.5%;
+  margin: 1em;
+}
+
+.shownInfo img{
+  width:13em;
+  border-radius: 10px;
+  height: auto;
+  border: 3px #B447CC solid;
+}
+
+
+
+.exit{
+  column-span: all;
+  width: 100%;
+  height: 5em;
+}
+
+.exit h1{
+  margin-left: 1em;
+  width: fit-content;
+}
+
+.exit h1:hover{
+  cursor: pointer;
 }
 
 </style>
