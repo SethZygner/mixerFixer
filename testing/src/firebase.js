@@ -65,9 +65,9 @@ function addUser(data){
 
 }
 
-async function getAllUsers(arr){
+function getAllUsers(arr){
     arr.length = 0;
-    await db.collection("Users")
+    db.collection("Users")
         .get()
         .then((doc)=>{
             doc.forEach((user)=>{
@@ -83,8 +83,7 @@ async function getAllUsers(arr){
         })
 }
 
-await getAllUsers(arrayOfUsers);
-console.log(arrayOfUsers);
+ getAllUsers(arrayOfUsers);
 
 
 

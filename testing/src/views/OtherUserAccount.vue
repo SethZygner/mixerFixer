@@ -79,8 +79,8 @@ function getDrinkInfo(index){
   showDrinkInfo.value = true;
 }
 
-async function getMadeGames(){
-  await fire.db.collection("Users")
+function getMadeGames(){
+  fire.db.collection("Users")
   .doc(fire.userId.value)
   .collection("GamesMade")
   .get()
@@ -92,8 +92,8 @@ async function getMadeGames(){
 
 }
 
-async function getMadeDrinks(){
- await fire.db.collection("Users")
+function getMadeDrinks(){
+ fire.db.collection("Users")
   .doc(fire.userId.value)
   .collection("MadeDrinks")
   .get()
@@ -106,9 +106,9 @@ async function getMadeDrinks(){
      })
 }
 
-async function getStuff(){
+function getStuff(){
   userInfo.length = 0;
- await fire.db.collection("Users")
+fire.db.collection("Users")
       .doc(fire.userId.value)
       .get()
       .then((result)=>{

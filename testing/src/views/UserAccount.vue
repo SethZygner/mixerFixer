@@ -109,10 +109,10 @@ function addBio(){
   hasBio.value = true;
 }
 
-async function getInfoOfUser(){
+function getInfoOfUser(){
   try{
     info.length = 0;
-   await onAuthStateChanged(fire.auth, ()=>{
+   onAuthStateChanged(fire.auth, ()=>{
      try{
        fire.db.collection("Users")
            .doc(fire.auth.currentUser.uid)
@@ -163,9 +163,9 @@ function enteredBio(){
 
 }
 
-async function getSavedAPIDrinks(){
+function getSavedAPIDrinks(){
   APIFavorites.length = 0;
-  await fire.db.collection("Users")
+  fire.db.collection("Users")
   .doc(fire.auth.currentUser.uid)
   .collection("APIFavorites")
   .get()
