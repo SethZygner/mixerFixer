@@ -27,6 +27,8 @@ let arrayOfUsers = reactive([]);
 
 
 
+
+
 onAuthStateChanged(auth, ()=>{
     signedIn.value = auth.currentUser !== null;
 })
