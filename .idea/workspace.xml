@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0d8f45e-91f2-4bf9-b4a0-550a30f09d2a" name="Changes" comment="Said screw it on the followers part but the rest is happening" />
+    <list default="true" id="e0d8f45e-91f2-4bf9-b4a0-550a30f09d2a" name="Changes" comment="Said screw it on the followers part but the rest is happening">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <list id="eef118a5-a22a-4308-94bd-e4ca0a1a6eec" name="Changes by brice" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +131,7 @@
       <workItem from="1652310602988" duration="615000" />
       <workItem from="1652570172743" duration="3137000" />
       <workItem from="1652727306710" duration="623000" />
-      <workItem from="1652738388313" duration="944000" />
+      <workItem from="1652738388313" duration="1755000" />
     </task>
     <servers />
   </component>
